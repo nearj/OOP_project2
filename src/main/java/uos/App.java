@@ -12,7 +12,8 @@ package uos;
 // -- jonghun: doing --
 // TODO: member class commit
 
-// -- hay
+
+// -- hayonh: kk
 public class App {
-	private void kkkkasdkfjasdkgj(){};
+
 }
