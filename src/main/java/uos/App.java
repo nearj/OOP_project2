@@ -1,7 +1,7 @@
 package uos;
 
 // -- 1st required --
-// TODO:
+// TODO: member class commit
 
 // -- 2nd required --
 // TODO:
@@ -10,5 +10,5 @@ package uos;
 // TODO:
 
 public class App {
-
+	private void zzzz(){};
 }
