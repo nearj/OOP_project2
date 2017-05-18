@@ -21,8 +21,11 @@ public class Delim {
 	public final static String PARAMETER_CLOSE = ")";
 	
 	
-	public final static String cBRACKET_OPEN = "(";
-	public final static String cBRACKET_CLOSE = ")";
+	public final static String PAREN_OPEN = "(";
+	public final static String PAREN_CLOSE = ")";
+	
+	public final static String ARRAY_OPEN ="[";
+	public final static String ARRAY_CLOSE="]";
 	
 	
 	public final static String ACCESSOR = "::";
