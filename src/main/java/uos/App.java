@@ -10,6 +10,5 @@ package uos;
 // TODO:
 
 public class App {
-	private void zzzz(){};
-	private void zzz(){};
+
 }
