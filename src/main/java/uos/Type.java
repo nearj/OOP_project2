@@ -1,5 +1,10 @@
 package uos;
 
+/**
+ * Type of member or method.
+ * 
+ * @author imp
+ */
 public enum Type {
 	VOID("void"), BOOL("bool"), INT("int");
 	
@@ -13,6 +18,12 @@ public enum Type {
 		return type;
 	}
 	
+	/**
+	 * With String parameter, return according type.
+	 * 
+	 * @param type
+	 * @return Type which according the string parameter.
+	 */
 	public static Type set( String type ) {
 		if( type.equals(VOID) )
 			return Type.VOID;

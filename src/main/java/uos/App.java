@@ -1,7 +1,7 @@
 package uos;
 
 // -- 1st required --
-
+// TODO:
 
 // -- 2nd required --
 // TODO:
@@ -12,8 +12,7 @@ package uos;
 // -- jonghun: doing --
 // TODO: member class commit
 
-
-// -- hayonh: kk
+// -- hayonh: doing --
+// TODO: 
 public class App {
-
 }

@@ -7,12 +7,21 @@ import uos.parse.PMethod;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class LibraryTest {
     @Test public void testSomeLibraryMethod() {
-    	String str = "if( ( last + 1 ) % == first  )\n" +
-    			"return true;\n" + "else return false;";
-    	System.out.println(str);
-    	if( str.contains("firs!!") )
-    		System.out.println("first!!!!");
+    	try {
+			System.out.println( 
+					new String( Files.readAllBytes( Paths.get("Queue.cpp") ),StandardCharsets.UTF_8 ).
+					replace(System.lineSeparator(), ""));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     }
 }

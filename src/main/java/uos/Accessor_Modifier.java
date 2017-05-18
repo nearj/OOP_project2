@@ -1,5 +1,10 @@
 package uos;
 
+/**
+ * Accssor modifier
+ * 
+ * @author imp
+ */
 public enum Accessor_Modifier {
 	PUBLIC("public"), PRIVATE("private");
 	
