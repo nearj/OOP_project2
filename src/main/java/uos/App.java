@@ -11,4 +11,5 @@ package uos;
 
 public class App {
 	private void zzzz(){};
+	private void zzz(){};
 }
