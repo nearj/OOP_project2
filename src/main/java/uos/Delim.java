@@ -28,6 +28,7 @@ public class Delim {
 	public final static String ARRAY_CLOSE="]";
 	
 	
+	public final static String SPACE = " ";
 	public final static String ACCESSOR = "::";
 	public final static String LINE_END = ";";
 	public final static String SEMI_COLON = ",";

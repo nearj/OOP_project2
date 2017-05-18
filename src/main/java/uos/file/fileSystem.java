@@ -18,6 +18,7 @@ import uos.parse.PMethod;
 /**
  * This class implements to open files and to parse data.
  * 
+ * Abbreviation: 
  * @author 2016920054_JUHAYONG
  *
  */
@@ -37,12 +38,18 @@ public class fileSystem {
 	// Default setting.
 	
 	private String fileName = DEFAULT_FILENAME;
-	private String fullName = fileName + DEFAULT_EXT;
+	private String fullName = fileName + "." + DEFAULT_EXT;
 	private String fullPath = DEFAULT_PATH + fullName; 
 	// Path setting. 
+	{
+	
+	}
 	
 	/**
 	 * Read file with user prompted file and parse each contents.
+	 * 
+	 * Information: info
+	 * Scanner: scn 
 	 * 
 	 * @param File to read and parse.
 	 */
@@ -256,7 +263,7 @@ public class fileSystem {
 		Scanner scn = new Scanner(inStrmReader);
 		fileName = scn.nextLine();
 		scn.close();
-		fullPath = DEFAULT_PATH + fileName + Ext.CPP;
+		fullPath = DEFAULT_PATH + fileName + "." + Ext.CPP;
 		return new File(fullPath);
 	}
 	

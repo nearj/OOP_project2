@@ -1,7 +1,7 @@
 package uos;
 
 // -- 1st required --
-// TODO: member class commit
+
 
 // -- 2nd required --
 // TODO:
@@ -9,6 +9,10 @@ package uos;
 // -- 3rd required --
 // TODO:
 
+// -- jonghun: doing --
+// TODO: member class commit
+
+// -- hay
 public class App {
 	private void kkkkasdkfjasdkgj(){};
 }

@@ -15,6 +15,7 @@ public final class PMethod implements Methods {
 	private List<Members> memberList = new ArrayList<>();
 	private PMethod() {} // To prevent instantiation 
 	
+
 	public static PMethod newInstance() {
 		return new PMethod();
 	}

@@ -6,6 +6,7 @@ import java.util.Map;
 import uos.Type;
 
 public interface Methods {
+	
 	public void setName( String methodName );
 	public String getName();
 	
