@@ -164,8 +164,6 @@ public final class PClass implements Classes, Parse {
 		return contents;
 	}
 	// < /Content >
-
-	
 	// -------------------------------- Method ----------------------------------
 
 }

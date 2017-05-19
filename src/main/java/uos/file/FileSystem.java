@@ -15,7 +15,7 @@ import uos.parse.PSource;
  * @author 2016920054_JUHAYONG
  *
  */
-public class fileSystem {
+public class FileSystem {
 
 	/**
 	 * File extenstion class
@@ -41,13 +41,7 @@ public class fileSystem {
 	// Path setting. 
 	
 	/**
-	 * Read file with user prompted file and parse each contents.
-	 * 
-	 * <p>Abbreviation</p>
-	 * info: Information
-	 * scn: Scanner
-	 * Delim: delimiter
-	 * init: Initialization 
+	 * Read file with user prompted file.
 	 * 
 	 * @param File to read and parse.
 	 */
@@ -55,6 +49,7 @@ public class fileSystem {
 		PSource pSource = PSource.newInstance();
 		
 		try {
+			pSource.setFileName( file.getName() );
 			pSource.setContents( 
 					new String( Files.readAllBytes( file.toPath() ) ,StandardCharsets.UTF_8 ) );
 		} catch ( InvalidPathException e) {

@@ -9,6 +9,7 @@ import uos.Type;
 public final class PSource implements Parse {
 	
 	private String contents;
+	private String fileName;
 	
 	public static PSource newInstance() {
 		return new PSource();
@@ -16,6 +17,14 @@ public final class PSource implements Parse {
 	
 	enum MethodType {
 		Constructor, Method 
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public String getFileName() {
+		return fileName;
 	}
 	
 	@Override
