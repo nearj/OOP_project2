@@ -35,11 +35,11 @@ public final class PClass implements Classes, Parse {
 	 * @return {@link PClass}
 	 */
 	public static PClass newInstance() {
-		classList.add(new PClass());
-		return (PClass) classList.get( classList.size() - 1 );
+		return new PClass();
 	}
 		
 	// < Name >
+	
 	@Override
 	public void setName( String className ) {
 		this.className = className;
@@ -51,21 +51,6 @@ public final class PClass implements Classes, Parse {
 	}
 	
 	// < /Name >
-	// < Class list >
-	
-	@Override
-	public void setClass( Classes classes ) {
-		classList.add(classes);
-	}
-	
-	
-
-	@Override
-	public Classes getKlass(int index) {
-		return classList.get(index);
-	}
-	
-	// < /Class List >
 	// < Method List >
 
 	@Override

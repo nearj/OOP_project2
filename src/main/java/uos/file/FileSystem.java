@@ -2,11 +2,9 @@ package uos.file;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
-import java.util.Scanner;
 
 import uos.parse.PSource;
 
@@ -22,32 +20,24 @@ public class FileSystem {
 	 * @author 2016920054_JUHAYONG
 	 *
 	 */
-	final static class Ext {
-		final static String CPP = "cpp";
-		final static String WILDCARD = "*";
+	public final static class Ext {
+		public final static String CPP = "cpp";
 	}
 	
-	private static final InputStreamReader inStrmReader =
-			new InputStreamReader( System.in );
-	
-	private static final String DEFAULT_PATH = "./";
-	private static final String DEFAULT_FILENAME = "QUEUE";
-	private static final String DEFAULT_EXT = Ext.CPP;
+	public static final String DEFAULT_PATH = "./";
+	public static final String DEFAULT_FILENAME = "QUEUE";
+	public static final String DEFAULT_EXT = Ext.CPP;
 	// Default setting.
 	
-	private String fileName = DEFAULT_FILENAME;
-	private String fullName = fileName + "." + DEFAULT_EXT;
-	private String fullPath = DEFAULT_PATH + fullName; 
-	// Path setting. 
+	private static PSource pSource = PSource.newInstance();
 	
 	/**
-	 * Read file with user prompted file.
+	 * Read file and pass to Parse Source class
 	 * 
-	 * @param File to read and parse.
+	 * @param file File to read.
+	 * @return Parse Source Class
 	 */
-	public PSource reader( File file ) {
-		PSource pSource = PSource.newInstance();
-		
+	public static PSource read( File file ) {
 		try {
 			pSource.setFileName( file.getName() );
 			pSource.setContents( 
@@ -61,20 +51,13 @@ public class FileSystem {
 		return pSource;
 	}
 	
-	/**
-	 * Prompt file to read.
-	 * 
-	 * @return File which is selected by interface.
-	 */
-	public File open() {
-		System.out.print( "Select File Name: " );
-		Scanner scn = new Scanner(inStrmReader);
-		fileName = scn.nextLine();
-		scn.close();
-		fullPath = DEFAULT_PATH + fileName + "." + Ext.CPP;
-		return new File(fullPath);
+	public static void save( PSource pSource ) {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append(pSource.getFileName() + "has classes");
+		pSource.getClassList();
+		
 	}
-	
+
 	/**
 	 * Close program.
 	 */

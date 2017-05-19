@@ -3,25 +3,55 @@
  */
 import org.junit.Test;
 
+import uos.file.FileSystem;
 import uos.parse.PMethod;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.text.Utilities;
+
+import java.awt.*;
+import java.awt.event.*;
+
 public class LibraryTest {
     @Test public void testSomeLibraryMethod() {
-    	try {
-			System.out.println( 
-					new String( Files.readAllBytes( Paths.get("Queue.cpp") ),StandardCharsets.UTF_8 ).
-					replace(System.lineSeparator(), ""));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	JFileChooser jFileChooser = new JFileChooser();
+    	jFileChooser.setDialogTitle(" File");
+    	jFileChooser.setCurrentDirectory(new File("."));
+    	jFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+    	jFileChooser.setFileFilter( new FileFilter() {
+			
+			@Override
+			public String getDescription() {
+				return "cpp files";
+			}
+			
+			@Override
+			public boolean accept(File f) {
+				if( f.isDirectory() ) return true;
+				
+				if( f.getName().substring(f.getName().lastIndexOf('.') + 1 ).equals("cpp") )
+					return true;
+				else return false;
+			}
+		});
+    	
+    	int retVal = jFileChooser.showOpenDialog(null);
+    	if( retVal == JFileChooser.APPROVE_OPTION ) {
+    		File selectedFile = jFileChooser.getSelectedFile();
+    		System.out.println(selectedFile.getName());
+    	}
     	
     }
 }
+

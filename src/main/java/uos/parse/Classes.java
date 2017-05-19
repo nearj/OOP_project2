@@ -1,6 +1,5 @@
 package uos.parse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,9 +8,7 @@ import java.util.List;
  * @author imp
  */
 public interface Classes {
-	
-	static List<Classes> classList = new ArrayList<>();
-	
+
 	// < Name >
 	
 	/**
@@ -27,22 +24,6 @@ public interface Classes {
 	public String getName();
 	
 	// < /Name >
-	// < Class List >
-	
-	/**
-	 * As a top hierarchy, this class has own list of class.
-	 * @param classes class instance.
-	 */
-	public void setClass( Classes classes );
-	
-	
-	/**
-	 * Return {@link Classes} with specified index
-	 * @return class class instance.
-	 */
-	public Classes getKlass( int index );
-	
-	// < /Class List >
 	// < Method List >
 	
 	/**

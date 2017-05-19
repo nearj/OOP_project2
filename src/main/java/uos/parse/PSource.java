@@ -1,5 +1,7 @@
 package uos.parse;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import uos.Accessor_Modifier;
@@ -10,11 +12,13 @@ public final class PSource implements Parse {
 	
 	private String contents;
 	private String fileName;
-	
+	private List<Classes> classList = new ArrayList<>();
+
 	public static PSource newInstance() {
 		return new PSource();
 	}
 	
+
 	enum MethodType {
 		Constructor, Method 
 	}
@@ -27,6 +31,26 @@ public final class PSource implements Parse {
 		return fileName;
 	}
 	
+	// < Class list >
+	
+	public void setClass( Classes classes ) {
+		classList.add(classes);
+	}
+
+	public Classes getKlass(int index) {
+		return classList.get(index);
+	}
+
+	public void clearClassList() {
+		classList.clear();
+	}
+	
+	public List<Classes> getClassList() {
+		return classList;
+	}
+
+    // < /Class List >
+		
 	@Override
 	public void setContents(String contents) {
 		this.contents = contents;
@@ -112,7 +136,7 @@ public final class PSource implements Parse {
 						if( lineScn.hasNext() ) {
 							
 							Classes classes = 
-									Classes.classList.get( Classes.classList.size() - 1 );
+									classList.get( classList.size() - 1 );
 							PMethod pMethod = PMethod.newInstance();
 							pMethod.setRefClass(classes);
 							
@@ -157,7 +181,7 @@ public final class PSource implements Parse {
 		
 		while( methodScn.hasNext() ) {
 			String infoContent = methodScn.next();
-			Classes classes = Classes.classList.get( Classes.classList.size() - 1 );
+			Classes classes = classList.get( classList.size() - 1 );
 			PMethod pMethod = null;
 			MethodType methodType = null;
 			

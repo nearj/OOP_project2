@@ -1,14 +1,17 @@
 package uos.gui;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.File;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JMenu;
@@ -20,20 +23,23 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import uos.file.FileSystem;
 import uos.parse.Classes;
 import uos.parse.Members;
 import uos.parse.Methods;
+import uos.parse.PSource;
 
 
-public class GuiSystem {
+public class GUISystem {
 	
 	private static final int DEFAULT_SIZE_X = 540;
 	private static final int DEFAULT_SIZE_Y = 360;
 	private int size_x = DEFAULT_SIZE_X;
 	private int size_y = DEFAULT_SIZE_Y;
+	private static PSource pSource;
 	
 	private static JFrame mainFrame = new JFrame();
 	
@@ -44,7 +50,7 @@ public class GuiSystem {
 		
 		List<DefaultMutableTreeNode> classNodeList = new ArrayList<>();
 		
-		for( Classes classes : Classes.classList ) {
+		for( Classes classes : pSource.getClassList() ) {
 			root.add( new DefaultMutableTreeNode(classes){
 
 				private static final long serialVersionUID = -1405861207465188691L;
@@ -110,12 +116,36 @@ public class GuiSystem {
 		jmFile.add(jmiSAVE);
 		jmFile.add(jmiCLOSE);
 		jmFile.add(jmiEXIT);
-		jmiOPEN.addActionListener(new ActionListener() {
+		
+		jmiOPEN.addActionListener( new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FileSystem fileSystem = new FileSystem();
-				fileSystem.open();
+				JFileChooser jFileChooser = new JFileChooser();
+		    	jFileChooser.setDialogTitle("Open File");
+		    	jFileChooser.setCurrentDirectory(new File("."));
+		    	jFileChooser.setDialogType( JFileChooser.OPEN_DIALOG );
+		    	jFileChooser.setFileFilter( new FileFilter() {
+					@Override
+					public String getDescription() {
+						return "cpp files";
+					}
+					
+					@Override
+					public boolean accept(File f) {
+						if( f.isDirectory() ) return true;
+						
+						if( f.getName().substring(f.getName().lastIndexOf('.') + 1 ).equals("cpp") )
+							return true;
+						else return false;
+					}
+				});
+		    	
+		    	int retVal = jFileChooser.showOpenDialog(null);
+		    	
+		    	if( retVal == JFileChooser.APPROVE_OPTION ) {
+		    		pSource = FileSystem.read( jFileChooser.getSelectedFile() );
+		    	}	
 			}
 		});
 		
