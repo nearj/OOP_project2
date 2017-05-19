@@ -1,6 +1,5 @@
 package uos;
 
-
 /** -- Done -- */
 // < package: uos >
 // Accessor_Modifier
@@ -39,7 +38,7 @@ package uos;
 // PMember
 
 //< package: gui >
-// GUISystem - 
+// GUISystem - class table, method text
 
 /** -- 1st required -- */
 // TODO-1st: Interface PMember

@@ -1,0 +1,26 @@
+File Name: Queue.cpp
+
+Classes:
+/t Queue
+...
+
+<class Queue>
+methods:
+/t Queue()
+/t bool isFull()
+...
+
+field:
+int arr[]
+...
+
+...
+/t <method Queue>
+/t field:
+/t/t size
+/t/t last
+...
+/t </method Queue>
+...
+
+</class Queue>
