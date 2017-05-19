@@ -136,12 +136,12 @@ public class GuiSystem {
 	}
 	
 	private static JList memberList( List<Members> memberList ) {
-		JList jl = new JList<>();
-		jl.setName("Member");
+		JList<String> jList = new JList<>();
+		jList.setName("Member");
 		for( Members members : memberList ) {
-			jl.add( new JLabel(members.getName()) );
+			jList.add( new JLabel(members.getName()) );
 		}
-		return jl;
+		return jList;
 	}
 }
 
