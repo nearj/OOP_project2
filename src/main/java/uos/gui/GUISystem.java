@@ -100,7 +100,7 @@ public class GUISystem {
 		GridBagConstraints gbc1 = new GridBagConstraints();
 		gbc1.fill = GridBagConstraints.HORIZONTAL;
 		gbc1.gridx = 0;
-		gbc1.gridy = 0;
+		gbc1.gridy = 1;
 		gbc1.weightx = 0.3;
 		treePanel.add( treePane,  gbc1 );
 	}
@@ -123,7 +123,7 @@ public class GUISystem {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser jFileChooser = new JFileChooser();
 		    	jFileChooser.setDialogTitle("Open File");
-		    	jFileChooser.setCurrentDirectory(new File("."));
+		    	jFileChooser.setCurrentDirectory(new File(FileSystem.DEFAULT_PATH));
 		    	jFileChooser.setDialogType( JFileChooser.OPEN_DIALOG );
 		    	jFileChooser.setFileFilter( new FileFilter() {
 					@Override
@@ -142,7 +142,6 @@ public class GUISystem {
 				});
 		    	
 		    	int retVal = jFileChooser.showOpenDialog(null);
-		    	
 		    	if( retVal == JFileChooser.APPROVE_OPTION ) {
 		    		pSource = FileSystem.read( jFileChooser.getSelectedFile() );
 		    	}	
@@ -153,14 +152,37 @@ public class GUISystem {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				JFileChooser jFileChooser = new JFileChooser();
+		    	jFileChooser.setDialogTitle("Save File");
+		    	jFileChooser.setCurrentDirectory(new File(FileSystem.DEFAULT_PATH));
+		    	jFileChooser.setDialogType( JFileChooser.SAVE_DIALOG );
+		    	jFileChooser.setFileFilter( new FileFilter() {
+					@Override
+					public String getDescription() {
+						return "text files";
+					}
+					
+					@Override
+					public boolean accept(File f) {
+						if( f.isDirectory() ) return true;
+						
+						if( f.getName().substring(f.getName().lastIndexOf('.') + 1 ).equals("txt") )
+							return true;
+						else return false;
+					}
+				});
+		    	
+		    	int retVal = jFileChooser.showSaveDialog(null);
+		    	if( retVal == JFileChooser.APPROVE_OPTION ) {
+		    		FileSystem.save( jFileChooser.getSelectedFile(), pSource );
+		    	}
 			}
 		});
 		
 		jmiEXIT.addActionListener( new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				FileSystem.exit();
 			}
 		});
 	}

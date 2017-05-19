@@ -1,6 +1,8 @@
 package uos.file;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -24,9 +26,9 @@ public class FileSystem {
 		public final static String CPP = "cpp";
 	}
 	
-	public static final String DEFAULT_PATH = "./";
-	public static final String DEFAULT_FILENAME = "QUEUE";
-	public static final String DEFAULT_EXT = Ext.CPP;
+	public static final String DEFAULT_PATH = ".";         // Current directory
+	public static final String DEFAULT_FILENAME = "Queue"; // Project file
+	public static final String DEFAULT_EXT = Ext.CPP;      // Cpp extension
 	// Default setting.
 	
 	private static PSource pSource = PSource.newInstance();
@@ -51,17 +53,19 @@ public class FileSystem {
 		return pSource;
 	}
 	
-	public static void save( PSource pSource ) {
-		StringBuilder strBuilder = new StringBuilder();
-		strBuilder.append(pSource.getFileName() + "has classes");
-		pSource.getClassList();
-		
+	public static void save( File file, PSource pSource ) {
+		try( BufferedWriter bufferedWriter = 
+				new BufferedWriter( new FileWriter(file) ) ) {
+			bufferedWriter.write( pSource.getContents() );
+		} catch ( IOException e ) {
+			System.out.println( "Error: " + e );
+		}
 	}
 
 	/**
 	 * Close program.
 	 */
-	public void close() {
+	public static void exit() {
 		System.exit(0);
 	}
 }

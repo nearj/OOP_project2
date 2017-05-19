@@ -2,6 +2,8 @@ package uos.parse;
 
 import java.util.List;
 
+import uos.Type;
+
 public interface Members{
 	
 	// < Reference class >
@@ -41,7 +43,11 @@ public interface Members{
 
 	// < /Reference class >
 
-
+	public Type getType();
+	public void setType();
+	public boolean isArray();
+	public String getArray();
+	
 	public void setName();
 	public String getName();
 	

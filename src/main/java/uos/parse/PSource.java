@@ -1,6 +1,7 @@
 package uos.parse;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,8 +10,7 @@ import uos.Delim;
 import uos.Type;
 
 public final class PSource implements Parse {
-	
-	private String contents;
+
 	private String fileName;
 	private List<Classes> classList = new ArrayList<>();
 
@@ -53,8 +53,6 @@ public final class PSource implements Parse {
 		
 	@Override
 	public void setContents(String contents) {
-		this.contents = contents;
-		
 		Scanner scn = new Scanner(contents);
 		scn.useDelimiter(Delim.CLASS);
 		
@@ -91,7 +89,77 @@ public final class PSource implements Parse {
 
 	@Override
 	public String getContents() {
-		return contents;
+		StringBuilder strBuilder = new StringBuilder();
+		
+		// < File name >
+		strBuilder.append("File Name: " + fileName + 
+				System.lineSeparator() + System.lineSeparator());
+		// < /File name >
+		
+		// < Class-list >
+		strBuilder.append( "Classes: " + System.lineSeparator() );
+		for( Classes classes : classList ) {
+			strBuilder.append( Delim.TAB + classes.getName() );
+		}
+		strBuilder.append( System.lineSeparator() + System.lineSeparator() );
+		// < /Class-list >
+		
+		// < Class specification >
+		for( Classes classes : classList ) {
+			strBuilder.append( Delim.TAG_OPEN + "class " + classes.getName() + 
+					Delim.TAG_CLOSE + System.lineSeparator() );
+			
+			// < Method-list >
+			strBuilder.append("methods:" + System.lineSeparator() );
+			for( Methods methods : classes.getMethodList() ) {
+				strBuilder.append( Delim.TAB + methods.getReturnType().name() + Delim.SPACE +
+						methods.getName() + Delim.PARAMETER_OPEN );
+				Iterator<String> iterator = methods.getParams().keySet().iterator();
+				while( iterator.hasNext() ) {
+					String paramName = iterator.next();
+					
+					strBuilder.append( Delim.TAB + 
+							methods.getParamType( paramName ).getTypeName() +
+							Delim.SPACE + paramName ) ;
+					
+					if( !iterator.hasNext() ) break;
+					strBuilder.append( "," );
+				}
+				strBuilder.append( Delim.PARAMETER_CLOSE + System.lineSeparator() );
+			}
+			strBuilder.append( System.lineSeparator() );
+			// < Method-list >
+			
+			// < Member-list >
+			for( Members members : classes.getMemberList() ) {
+				strBuilder.append( members.getType().getTypeName() + 
+						Delim.SPACE + members.getName() );
+				if( members.isArray() )
+					strBuilder.append(Delim.ARRAY_OPEN + Delim.ARRAY_CLOSE);
+				strBuilder.append( System.lineSeparator() );
+			}
+			// < /Member-list >
+			
+			// < Method specification >
+			for( Methods methods : classes.getMethodList() ) {
+				strBuilder.append( Delim.TAB + Delim.TAG_OPEN + 
+						"method " + methods.getName() + Delim.TAG_CLOSE +
+						System.lineSeparator() ); 
+				strBuilder.append( Delim.TAB + "field:" + System.lineSeparator() );
+				for( Members members : methods.getMemberList() ) {
+					strBuilder.append( Delim.TAB + Delim.TAB + members.getName() +
+							System.lineSeparator() );
+				}
+				strBuilder.append( Delim.TAB + Delim.TAG_OPEN +
+						"/method " + methods.getName() + Delim.TAG_CLOSE +
+						System.lineSeparator() );
+			}
+			// < /Method specification >
+			strBuilder.append( Delim.TAG_OPEN + "/class " + Delim.TAG_CLOSE +
+					System.lineSeparator() );
+		}
+		// < Class specification >
+		return strBuilder.toString();
 	}
 
 	private void initParser( String initContent ) {

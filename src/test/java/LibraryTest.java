@@ -25,28 +25,32 @@ import java.awt.event.*;
 
 public class LibraryTest {
     @Test public void testSomeLibraryMethod() {
-    	JFileChooser jFileChooser = new JFileChooser();
-    	jFileChooser.setDialogTitle(" File");
+    	JFileChooser jFileChooser = new JFileChooser(){
+    		    		
+    	};
+    	
+    	jFileChooser.setDialogTitle("Save File");
     	jFileChooser.setCurrentDirectory(new File("."));
-    	jFileChooser.setDialogType(JFileChooser.OPEN_DIALOG);
+    	jFileChooser.setSelectedFile(new File("Queue") );
+    	jFileChooser.setDialogType( JFileChooser.SAVE_DIALOG );
     	jFileChooser.setFileFilter( new FileFilter() {
-			
 			@Override
 			public String getDescription() {
-				return "cpp files";
+				return "text files";
 			}
 			
 			@Override
 			public boolean accept(File f) {
 				if( f.isDirectory() ) return true;
 				
-				if( f.getName().substring(f.getName().lastIndexOf('.') + 1 ).equals("cpp") )
+				if( f.getName().substring(f.getName().lastIndexOf('.') + 1 ).equals("txt") )
 					return true;
 				else return false;
 			}
 		});
     	
-    	int retVal = jFileChooser.showOpenDialog(null);
+    	int retVal = jFileChooser.showSaveDialog(null);
+    	    	
     	if( retVal == JFileChooser.APPROVE_OPTION ) {
     		File selectedFile = jFileChooser.getSelectedFile();
     		System.out.println(selectedFile.getName());

@@ -29,16 +29,19 @@ public class Delim {
 	public final static String PAREN_OPEN = "(";
 	public final static String PAREN_CLOSE = ")";
 	
-	public final static String ARRAY_OPEN ="[";
-	public final static String ARRAY_CLOSE="]";
+	public final static String ARRAY_OPEN = "[";
+	public final static String ARRAY_CLOSE= "]";
 	
+	public final static String TAG_OPEN = "<";
+	public final static String TAG_CLOSE = ">";
 	
 	public final static String BLANK = "";
 	public final static String SPACE = " ";
 	public final static String COLON = ":";
-	public final static String ACCESSOR = "::";
 	public final static String COMMA = ",";
+	public final static String ACCESSOR = "::";
 	public final static String LINE_END = ";";
+	public final static String TAB = "\t";
 	
 	
 	private static List<String> classList = new ArrayList<>();
