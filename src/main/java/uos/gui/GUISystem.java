@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -33,7 +34,7 @@ import uos.parse.Methods;
 import uos.parse.PSource;
 
 
-public class GUISystem {
+public class GUISystem implements Runnable {
 	
 	private static final int DEFAULT_SIZE_X = 540;
 	private static final int DEFAULT_SIZE_Y = 360;
@@ -42,7 +43,34 @@ public class GUISystem {
 	private static PSource pSource;
 	
 	private static JFrame mainFrame = new JFrame();
+	private static JPanel mainPanel = new JPanel( new GridBagLayout() );
+	private static JMenuBar jmb = new JMenuBar();
 	
+
+	@Override
+	public void run() {
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.add(mainPanel);
+		mainFrame.pack();
+		mainFrame.setVisible(true);
+		
+	}
+	
+	static {
+		GridBagConstraints gridBagCstr = new GridBagConstraints();
+		gridBagCstr.fill = GridBagConstraints.HORIZONTAL;
+		gridBagCstr.gridx = 0;
+		gridBagCstr.gridy = 0;
+		gridBagCstr.ipadx = DEFAULT_SIZE_X;
+		gridBagCstr.anchor = GridBagConstraints.FIRST_LINE_START;
+		mainPanel.setSize( DEFAULT_SIZE_X, DEFAULT_SIZE_Y);
+		mainPanel.add( jmb, gridBagCstr );
+		gridBagCstr.gridx = 0;
+		gridBagCstr.gridy = 1;
+	
+	}
+	
+	/*
 	static {
 		JTree classTree = new JTree();
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
@@ -97,16 +125,13 @@ public class GUISystem {
 		JPanel treePanel = new JPanel();
 		treePanel.setLayout( new BorderLayout() );
 		JScrollPane treePane = new JScrollPane(classTree);
-		GridBagConstraints gbc1 = new GridBagConstraints();
-		gbc1.fill = GridBagConstraints.HORIZONTAL;
-		gbc1.gridx = 0;
-		gbc1.gridy = 1;
-		gbc1.weightx = 0.3;
-		treePanel.add( treePane,  gbc1 );
+		
+		
 	}
+	*/
 	
 	static {
-		JMenuBar jmb = new JMenuBar();
+		
 		JMenu jmFile = new JMenu("File");
 		JMenuItem jmiOPEN = new JMenuItem("Open File");
 		JMenuItem jmiSAVE = new JMenuItem("SAVE");
@@ -185,6 +210,7 @@ public class GUISystem {
 				FileSystem.exit();
 			}
 		});
+		jmb.add(jmFile);
 	}
 	
 	private static JList memberList( List<Members> memberList ) {
@@ -195,6 +221,7 @@ public class GUISystem {
 		}
 		return jList;
 	}
+
 }
 
 

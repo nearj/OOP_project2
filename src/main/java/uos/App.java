@@ -1,5 +1,9 @@
 package uos;
 
+import javax.swing.SwingUtilities;
+
+import uos.gui.GUISystem;
+
 /** -- Done -- */
 // < package: uos >
 // Accessor_Modifier
@@ -69,4 +73,7 @@ package uos;
 // TODO-3rd: to carry out save file with GUI
 
 public class App {
+	public static void main(String... args) {
+		SwingUtilities.invokeLater( new GUISystem() );
+	}
 }
