@@ -2,8 +2,8 @@ class Queue {
 
 public:
   Queue(void);
-  bool isEmpty();
-  bool isFull();
+  bool IsEmpty();
+  bool IsFull();
   void EnQueue(int);
   int DeQueue();
   ~Queue(void);

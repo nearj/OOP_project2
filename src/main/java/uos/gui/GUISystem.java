@@ -46,6 +46,12 @@ public class GUISystem implements Runnable {
 	private static JPanel mainPanel = new JPanel( new GridBagLayout() );
 	private static JMenuBar jmb = new JMenuBar();
 	
+	private static final JLabel DEFUALT_TREE_LABEL =
+			new JLabel("Hello There?, in the tree part"); 
+	private static final JLabel DEFUALT_RIGHT_LABEL =
+			new JLabel("Hello There?, in the right part "); 
+	private static final JLabel DEFUALT_INFO_LABEL =
+			new JLabel("Hello There?, in the info part"); 
 
 	@Override
 	public void run() {
@@ -53,7 +59,6 @@ public class GUISystem implements Runnable {
 		mainFrame.add(mainPanel);
 		mainFrame.pack();
 		mainFrame.setVisible(true);
-		
 	}
 	
 	static {
@@ -61,77 +66,105 @@ public class GUISystem implements Runnable {
 		gridBagCstr.fill = GridBagConstraints.HORIZONTAL;
 		gridBagCstr.gridx = 0;
 		gridBagCstr.gridy = 0;
+		gridBagCstr.gridwidth = 2;
+		gridBagCstr.gridheight = 1;
+		gridBagCstr.weightx = 1;
+		gridBagCstr.weighty = 0.1;
 		gridBagCstr.ipadx = DEFAULT_SIZE_X;
-		gridBagCstr.anchor = GridBagConstraints.FIRST_LINE_START;
+		gridBagCstr.anchor = GridBagConstraints.CENTER;
 		mainPanel.setSize( DEFAULT_SIZE_X, DEFAULT_SIZE_Y);
 		mainPanel.add( jmb, gridBagCstr );
+		
+		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 0;
 		gridBagCstr.gridy = 1;
-	
+		gridBagCstr.gridwidth = 1;
+		gridBagCstr.gridheight = 1;
+		gridBagCstr.weightx = 1d;
+		gridBagCstr.weighty = 0.9d;
+		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
+		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.5);
+		gridBagCstr.anchor = GridBagConstraints.CENTER;
+		mainPanel.add( DEFUALT_TREE_LABEL, gridBagCstr );
+		
+		gridBagCstr.fill = GridBagConstraints.BOTH;
+		gridBagCstr.gridx = 0;
+		gridBagCstr.gridy = 2;
+		gridBagCstr.gridwidth =	1;
+		gridBagCstr.gridheight = 1;
+		gridBagCstr.weightx = 1.0d;
+		gridBagCstr.weighty = 0.9d;
+		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
+		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.4);
+		gridBagCstr.anchor = GridBagConstraints.CENTER;
+		mainPanel.add( DEFUALT_INFO_LABEL, gridBagCstr);
+		
+		gridBagCstr.fill = GridBagConstraints.BOTH;
+		gridBagCstr.gridx = 1;
+		gridBagCstr.gridy = 1;
+		gridBagCstr.gridwidth = 1;
+		gridBagCstr.gridheight = 2;
+		gridBagCstr.weightx = 1.0d;
+		gridBagCstr.weighty = 0.9d;
+		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.6);
+		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.9);
+		gridBagCstr.anchor = GridBagConstraints.CENTER;
+		mainPanel.add( DEFUALT_RIGHT_LABEL, gridBagCstr);
 	}
 	
-	/*
-	static {
-		JTree classTree = new JTree();
+	
+	private static void classTree() {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
-		classTree.setRootVisible(false);
-		
-		List<DefaultMutableTreeNode> classNodeList = new ArrayList<>();
-		
 		for( Classes classes : pSource.getClassList() ) {
-			root.add( new DefaultMutableTreeNode(classes){
-
+			DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(classes) {
 				private static final long serialVersionUID = -1405861207465188691L;
-
+				
 				@Override public String toString() {
 					return classes.getName();
 				}
-			});
-		}
-		
-		for( DefaultMutableTreeNode classNode : classNodeList ) {
-			Classes classes = (Classes) classNode.getUserObject();
-			for( Methods methods : classes.getMethodList() ) {
-				classNode.add( new DefaultMutableTreeNode(methods) {
+			};
 
+			for( Methods methods : classes.getMethodList() ){
+				DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(methods) {
 					private static final long serialVersionUID = -6298724158229241038L;
 
 					@Override public String toString() {
 						StringBuilder strBuilder = new StringBuilder();
 						Iterator<String> iterator = methods.getParams().keySet().iterator();
 						while( iterator.hasNext() ) {
-							strBuilder.append( methods.getParamType( iterator.next() ) );
+							
+							strBuilder.append( methods.getParamType( iterator.next() ).getTypeName() );
 							if( !iterator.hasNext() ) break;
 							strBuilder.append(", ");
 						}
 						return methods.getName() + "(" + strBuilder.toString() + ")";
 					}
-				});
+				};
+				
+				classNode.add(methodNode);
 			}
-			for( Members members : classes.getMemberList() ) {
-				classNode.add( new DefaultMutableTreeNode(members) {
-
-					private static final long serialVersionUID = 1533853619145227062L;
-					
-					@Override public String toString() {
-						// TODO: Member stub.
-						return null;
-					}
-				});
-			}
+			root.add(classNode);
 		}
-		mainFrame.setLayout( new GridBagLayout() );
-		
-		JPanel treePanel = new JPanel();
-		treePanel.setLayout( new BorderLayout() );
-		JScrollPane treePane = new JScrollPane(classTree);
-		
-		
+		mainPanel.remove(DEFUALT_TREE_LABEL);
+		GridBagConstraints gridBagCstr = new GridBagConstraints();
+		gridBagCstr.fill = GridBagConstraints.BOTH;
+		gridBagCstr.gridx = 0;
+		gridBagCstr.gridy = 1;
+		gridBagCstr.gridwidth = 1;
+		gridBagCstr.gridheight = 1;
+		gridBagCstr.weightx = 1.0d;
+		gridBagCstr.weighty = 0.9d;
+		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
+		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.5);
+		gridBagCstr.anchor = GridBagConstraints.CENTER;
+
+		mainPanel.add( new JScrollPane( new JTree(root) ), gridBagCstr );
+    	mainPanel.revalidate();
+    	mainPanel.repaint();
 	}
-	*/
+	
 	
 	static {
-		
 		JMenu jmFile = new JMenu("File");
 		JMenuItem jmiOPEN = new JMenuItem("Open File");
 		JMenuItem jmiSAVE = new JMenuItem("SAVE");
@@ -148,6 +181,7 @@ public class GUISystem implements Runnable {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser jFileChooser = new JFileChooser();
 		    	jFileChooser.setDialogTitle("Open File");
+		    	jFileChooser.setSelectedFile(new File(FileSystem.DEFAULT_DIR));
 		    	jFileChooser.setCurrentDirectory(new File(FileSystem.DEFAULT_PATH));
 		    	jFileChooser.setDialogType( JFileChooser.OPEN_DIALOG );
 		    	jFileChooser.setFileFilter( new FileFilter() {
@@ -169,7 +203,8 @@ public class GUISystem implements Runnable {
 		    	int retVal = jFileChooser.showOpenDialog(null);
 		    	if( retVal == JFileChooser.APPROVE_OPTION ) {
 		    		pSource = FileSystem.read( jFileChooser.getSelectedFile() );
-		    	}	
+		    		classTree();
+		    	} else if( retVal == JFileChooser.CANCEL_OPTION );
 			}
 		});
 		

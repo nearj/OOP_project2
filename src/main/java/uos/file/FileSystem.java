@@ -29,6 +29,7 @@ public class FileSystem {
 	public static final String DEFAULT_PATH = ".";         // Current directory
 	public static final String DEFAULT_FILENAME = "Queue"; // Project file
 	public static final String DEFAULT_EXT = Ext.CPP;      // Cpp extension
+	public static final String DEFAULT_DIR = "./Queue.cpp";
 	// Default setting.
 	
 	private static PSource pSource = PSource.newInstance();

@@ -41,6 +41,7 @@ public class Delim {
 	public final static String COMMA = ",";
 	public final static String ACCESSOR = "::";
 	public final static String LINE_END = ";";
+	public final static String LINE_FEED = System.lineSeparator();
 	public final static String TAB = "\t";
 	
 	
