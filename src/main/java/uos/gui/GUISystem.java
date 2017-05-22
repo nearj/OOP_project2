@@ -5,13 +5,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -24,8 +33,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 
 import uos.file.FileSystem;
 import uos.parse.Classes;
@@ -35,9 +48,9 @@ import uos.parse.PSource;
 
 
 public class GUISystem implements Runnable {
-	
-	private static final int DEFAULT_SIZE_X = 540;
-	private static final int DEFAULT_SIZE_Y = 360;
+
+	private static final int DEFAULT_SIZE_X = 959;
+	private static final int DEFAULT_SIZE_Y = 757;
 	private int size_x = DEFAULT_SIZE_X;
 	private int size_y = DEFAULT_SIZE_Y;
 	private static PSource pSource;
@@ -46,31 +59,35 @@ public class GUISystem implements Runnable {
 	private static JPanel mainPanel = new JPanel( new GridBagLayout() );
 	private static JMenuBar jmb = new JMenuBar();
 	
-	private static final JLabel DEFUALT_TREE_LABEL =
-			new JLabel("Hello There?, in the tree part"); 
-	private static final JLabel DEFUALT_RIGHT_LABEL =
-			new JLabel("Hello There?, in the right part "); 
-	private static final JLabel DEFUALT_INFO_LABEL =
-			new JLabel("Hello There?, in the info part"); 
-
+	private static final JScrollPane DEFAULT_TREE =
+			new JScrollPane(); 
+	private static final JScrollPane DEFAULT_RIGHT =
+			new JScrollPane(); 
+	private static final JScrollPane DEFAULT_INFO = 
+			new JScrollPane();
+	private static GridBagConstraints gridBagCstr = new GridBagConstraints();
 	@Override
 	public void run() {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setBackground(Color.BLACK);
+		mainPanel.setBackground(Color.WHITE);
 		mainFrame.add(mainPanel);
-		mainFrame.pack();
+		mainFrame.setTitle("UOS OOP class 2nd project - parsing program");
+		mainFrame.setMinimumSize( new Dimension(800, 600) );
+		init();
 		mainFrame.setVisible(true);
+		
 	}
 	
-	static {
+	static void init() {
 		GridBagConstraints gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.HORIZONTAL;
 		gridBagCstr.gridx = 0;
 		gridBagCstr.gridy = 0;
 		gridBagCstr.gridwidth = 2;
 		gridBagCstr.gridheight = 1;
-		gridBagCstr.weightx = 1;
-		gridBagCstr.weighty = 0.1;
-		gridBagCstr.ipadx = DEFAULT_SIZE_X;
+		gridBagCstr.weightx = 1.0d;
+		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
 		mainPanel.setSize( DEFAULT_SIZE_X, DEFAULT_SIZE_Y);
 		mainPanel.add( jmb, gridBagCstr );
@@ -80,36 +97,51 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridy = 1;
 		gridBagCstr.gridwidth = 1;
 		gridBagCstr.gridheight = 1;
-		gridBagCstr.weightx = 1d;
-		gridBagCstr.weighty = 0.9d;
+		gridBagCstr.weightx = 0.4d;
+		gridBagCstr.weighty = 0.6d;
 		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
 		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.5);
-		gridBagCstr.anchor = GridBagConstraints.CENTER;
-		mainPanel.add( DEFUALT_TREE_LABEL, gridBagCstr );
+		DEFAULT_TREE.getViewport().setBackground(Color.WHITE);
+		JLabel treeLabel = new JLabel("Hello there? I am in the tree part");
+		treeLabel.setHorizontalAlignment(JLabel.CENTER);
+		DEFAULT_TREE.getViewport().add(treeLabel);
+		mainPanel.add( DEFAULT_TREE, gridBagCstr );
 		
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 0;
 		gridBagCstr.gridy = 2;
 		gridBagCstr.gridwidth =	1;
 		gridBagCstr.gridheight = 1;
-		gridBagCstr.weightx = 1.0d;
-		gridBagCstr.weighty = 0.9d;
+		gridBagCstr.weightx = 0.4d;
+		gridBagCstr.weighty = 0.3d;
 		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
 		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.4);
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
-		mainPanel.add( DEFUALT_INFO_LABEL, gridBagCstr);
+		DEFAULT_INFO.getViewport().setBackground(Color.WHITE);
+		JLabel infoLable = new JLabel("Hello there? I am in the info part");
+		infoLable.setHorizontalAlignment(JLabel.CENTER);
+		DEFAULT_INFO.getViewport().add(infoLable);
+		mainPanel.add( DEFAULT_INFO, gridBagCstr);
 		
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 1;
 		gridBagCstr.gridy = 1;
 		gridBagCstr.gridwidth = 1;
 		gridBagCstr.gridheight = 2;
-		gridBagCstr.weightx = 1.0d;
+		gridBagCstr.weightx = 0.6d;
 		gridBagCstr.weighty = 0.9d;
 		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.6);
 		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.9);
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
-		mainPanel.add( DEFUALT_RIGHT_LABEL, gridBagCstr);
+		JLabel rightLable = new JLabel("Hello there? I am in the right part");
+		rightLable.setHorizontalAlignment(JLabel.CENTER);
+		DEFAULT_RIGHT.getViewport().add(rightLable);
+		DEFAULT_RIGHT.getViewport().setBackground(Color.WHITE);
+		mainPanel.add( DEFAULT_RIGHT, gridBagCstr);
+		mainPanel.revalidate();
+		mainPanel.repaint();
+		mainFrame.revalidate();
+		mainFrame.repaint();
 	}
 	
 	
@@ -140,35 +172,72 @@ public class GUISystem implements Runnable {
 						return methods.getName() + "(" + strBuilder.toString() + ")";
 					}
 				};
-				
 				classNode.add(methodNode);
 			}
 			root.add(classNode);
 		}
-		mainPanel.remove(DEFUALT_TREE_LABEL);
+		JTree classTree = new JTree(root);
+		classTree.addTreeSelectionListener( new TreeSelectionListener() {
+			
+			@Override
+			public void valueChanged(TreeSelectionEvent e) {
+				DefaultMutableTreeNode nodeObj = 
+						(DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+				if( nodeObj.getUserObject() instanceof Classes ) {
+					// TODO: table stub.
+					System.out.println( ((Classes) nodeObj.getUserObject()).getName() );
+				} else if ( nodeObj.getUserObject() instanceof Methods ) {
+					memberList(((Methods) nodeObj.getUserObject()).getMemberList());
+				} else if ( nodeObj.getUserObject() instanceof Members ) {
+					// TODO: member stub.
+					System.out.println("members");
+				}
+				
+			}
+		});
+
+		mainPanel.remove(DEFAULT_TREE);
 		GridBagConstraints gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 0;
 		gridBagCstr.gridy = 1;
 		gridBagCstr.gridwidth = 1;
 		gridBagCstr.gridheight = 1;
-		gridBagCstr.weightx = 1.0d;
-		gridBagCstr.weighty = 0.9d;
-		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
-		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.5);
+		gridBagCstr.weightx = 0.4d;
+		gridBagCstr.weighty = 0.5d;
+		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.456);
+		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * -0.115);
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
+		Font font = classTree.getFont();
+		classTree.setFont(new Font(font.getName(), Font.PLAIN, 20) );
+		JScrollPane jsp = new JScrollPane();
+		
+		jsp.getViewport().add(classTree);
+		classTree.setRootVisible(false);
+		for( int i = 0 ; i < classTree.getRowCount(); ) {
+			classTree.expandRow(i++);
+		}
 
-		mainPanel.add( new JScrollPane( new JTree(root) ), gridBagCstr );
+		mainPanel.add( jsp, gridBagCstr );
     	mainPanel.revalidate();
+    	mainFrame.pack();
     	mainPanel.repaint();
 	}
 	
 	
 	static {
 		JMenu jmFile = new JMenu("File");
+		jmFile.setMnemonic(KeyEvent.VK_F);
+
 		JMenuItem jmiOPEN = new JMenuItem("Open File");
+		jmiOPEN.setMnemonic(KeyEvent.VK_O);
+		jmiOPEN.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
 		JMenuItem jmiSAVE = new JMenuItem("SAVE");
+		jmiSAVE.setMnemonic(KeyEvent.VK_S);
+		jmiSAVE.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
 		JMenuItem jmiCLOSE = new JMenuItem("CLOSE");
+		jmiCLOSE.setMnemonic(KeyEvent.VK_C);
+		jmiCLOSE.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK));
 		JMenuItem jmiEXIT = new JMenuItem("EXIT");
 		jmFile.add(jmiOPEN);
 		jmFile.add(jmiSAVE);
@@ -215,6 +284,7 @@ public class GUISystem implements Runnable {
 				JFileChooser jFileChooser = new JFileChooser();
 		    	jFileChooser.setDialogTitle("Save File");
 		    	jFileChooser.setCurrentDirectory(new File(FileSystem.DEFAULT_PATH));
+		    	jFileChooser.setSelectedFile(new File(pSource.getFileName()));
 		    	jFileChooser.setDialogType( JFileChooser.SAVE_DIALOG );
 		    	jFileChooser.setFileFilter( new FileFilter() {
 					@Override
@@ -239,24 +309,59 @@ public class GUISystem implements Runnable {
 			}
 		});
 		
+		jmiCLOSE.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.removeAll();
+				mainPanel.revalidate();
+				mainPanel.repaint();
+				init();
+				pSource.clearClassList();
+				pSource = null;
+			}
+		});
+		
 		jmiEXIT.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				FileSystem.exit();
 			}
 		});
+		jmb.setMinimumSize( new Dimension(300, 21));
 		jmb.add(jmFile);
 	}
 	
-	private static JList memberList( List<Members> memberList ) {
-		JList<String> jList = new JList<>();
-		jList.setName("Member");
+	private static void memberList( List<Members> memberList ) {
+		DefaultListModel<String> dlm = new DefaultListModel<>();
+		dlm.addElement("Use:");
+		dlm.addElement("hh");
+		
 		for( Members members : memberList ) {
-			jList.add( new JLabel(members.getName()) );
+			dlm.addElement(members.getName());
 		}
-		return jList;
+		
+		System.out.println(mainPanel.getComponents().length);
+		mainPanel.remove(DEFAULT_INFO);
+		System.out.println(mainPanel.getComponents().length);
+
+		GridBagConstraints gridBagCstr = new GridBagConstraints();
+		gridBagCstr.gridx = 0;
+		gridBagCstr.gridy = 2;
+		gridBagCstr.gridwidth =	1;
+		gridBagCstr.gridheight = 1;
+		gridBagCstr.weightx = 1.0d;
+		gridBagCstr.weighty = 0.3d;
+		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * -0.1);
+		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.144);
+		gridBagCstr.anchor = GridBagConstraints.CENTER;
+		JList<String> jList = new JList<>(dlm);
+		Font font = jList.getFont();
+		jList.setFont(new Font(font.getName(), font.getStyle(), 20) );
+		mainPanel.add( new JScrollPane( jList ), gridBagCstr );
+    	mainPanel.revalidate();
+    	mainFrame.pack();
+    	mainPanel.repaint();
 	}
 
 }
-
-

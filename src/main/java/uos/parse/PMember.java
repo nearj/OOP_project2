@@ -1,5 +1,12 @@
 package uos.parse;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import uos.Type;
+
 public class PMember implements Members,Parse{
 	
 	private Classes refClass;
@@ -64,6 +71,90 @@ public class PMember implements Members,Parse{
 	@Override
 	public String findUsedMethods(String memberName) {
 		
+	}
+
+
+	@Override
+	public void setContents(String contents) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public String getContents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Methods getRefMethod() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Methods> getRefMethodList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setType() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public boolean isArray() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public String getArray() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setName() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setMember() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Members getMember() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

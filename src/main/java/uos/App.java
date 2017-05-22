@@ -87,10 +87,6 @@ import uos.parse.PSource;
 
 public class App {
 	private static PSource pSource = new PSource();
-	
-	static {
-		pSource = FileSystem.read( new File("Queue.cpp") );
-	}
 
 	public static void main(String... args) {
 		SwingUtilities.invokeLater( new GUISystem() );

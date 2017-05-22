@@ -67,10 +67,12 @@ public final class PClass implements Classes, Parse {
 	@Override
 	public Methods getMethod( String methodName ) {
 		for( Methods methods : methodList ) {
-			if( methods.getName()== methodName )
+			if( methods.getName() == null ) {
+				continue;
+			}
+			if( methods.getName().equals(methodName) )
 				return methods;
 		}
-		
 		return null;
 	}
 
