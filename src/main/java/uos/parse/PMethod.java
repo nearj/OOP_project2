@@ -149,12 +149,17 @@ public final class PMethod implements Methods, Parse {
 	
 	@Override
 	public void setContents(String contents) {
+		
 		this.contents = contents;
 		for( Members members : refClass.getMemberList() ) {
 			if( contents.contains( members.getName() ) &&
-					!memberList.contains(members) );
-			memberList.add(members);
+					!memberList.contains(members) ){
+				memberList.add(members);
+				// members.setRefMethods(this);
+				// members.setRefClass(this.getRefClass());
+			}
 		}
+		
 	}
 
 	@Override

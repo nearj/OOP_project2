@@ -217,7 +217,7 @@ public final class PSource implements Parse {
 							if( methodInfo.equals( classes.getName() ) ||
 									methodInfo.equals( "~" + classes.getName() ) ) {
 								
-								// TODO: Constructor stub.
+								// TODO: Constructor stub
 							} else {
 								pMethod.setReturnType(
 										Type.set(
@@ -233,11 +233,18 @@ public final class PSource implements Parse {
 					} break;
 
 					case PRIVATE: {
-						// TODO: Private stub.
+						/*
+						if( lineScn.hasNext() ) {
+							Classes classes = 
+									classList.get(classList.size() - 1 ); //
+							PMember pMember = PMember.newInstance();
+							pMember.setRefClass(classes);
+						}
 						while( lineScn.hasNext() ) {
 							// TODO: Parsed Member stub.
 							break;
 						}
+						*/
 
 					}
 				}
