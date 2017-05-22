@@ -149,6 +149,7 @@ public final class PMethod implements Methods, Parse {
 	
 	@Override
 	public void setContents(String contents) {
+		
 		this.contents = contents;
 		// TEST
 		String[] tests = { "array", "last", "size", "first" };
@@ -165,13 +166,24 @@ public final class PMethod implements Methods, Parse {
 		/* OLD
 		for( Members members : refClass.getMemberList() ) {
 			if( contents.contains( members.getName() ) &&
+<<<<<<< Upstream, based on master
 					!memberList.contains(members) ) {
 				memberList.add(members);
 				members.setRefMethod(this);
 				members.setRefClass(this.getRefClass());
+=======
+					!memberList.contains(members) ){
+				memberList.add(members);
+				// members.setRefMethods(this);
+				// members.setRefClass(this.getRefClass());
+>>>>>>> c7bdd2c (바꿈 ㅋㅋ)
 			}
 		}
+<<<<<<< Upstream, based on master
 		*/
+=======
+		
+>>>>>>> c7bdd2c (바꿈 ㅋㅋ)
 	}
 
 	@Override
