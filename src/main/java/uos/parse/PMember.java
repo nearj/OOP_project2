@@ -33,6 +33,8 @@ public class PMember implements Members,Parse{
 		return refClass;
 	}
 	
+	
+	/*
 	@Override
 	public void setRefMethod(Methods methods) {
 		this.refMethod = methods;
@@ -47,12 +49,7 @@ public class PMember implements Members,Parse{
 	public List<Methods> getRefMethodList(){
 		
 	}
-	
-	@Override
-	public void setMemberType(Type type){
-		this.memberType=type;
-	}
-	
+		
 	@Override
 	public Type getMemberType(){
 		return memberType;
@@ -159,7 +156,102 @@ public class PMember implements Members,Parse{
 	
 	
 	
+	*/
+
+
+	@Override
+	public void setContents(String contents) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public String getContents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setRefMethod(Methods methods) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Methods getRefMethod() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Methods> getRefMethodList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Type getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setType() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public boolean isArray() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public String getArray() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setName() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public String getName() {
+		return memberName;
+	}
+
+
+	@Override
+	public void setMember() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Members getMember() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
+	public void setMemberName( String memberName ) {
+		this.memberName = memberName;
+	}
+}
 	
 	
 	

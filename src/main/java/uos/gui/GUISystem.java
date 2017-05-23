@@ -87,11 +87,11 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridwidth = 2;
 		gridBagCstr.gridheight = 1;
 		gridBagCstr.weightx = 1.0d;
-		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
 		mainPanel.setSize( DEFAULT_SIZE_X, DEFAULT_SIZE_Y);
 		mainPanel.add( jmb, gridBagCstr );
 		
+		gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 0;
 		gridBagCstr.gridy = 1;
@@ -99,14 +99,14 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridheight = 1;
 		gridBagCstr.weightx = 0.4d;
 		gridBagCstr.weighty = 0.6d;
-		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
-		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.5);
+
 		DEFAULT_TREE.getViewport().setBackground(Color.WHITE);
 		JLabel treeLabel = new JLabel("Hello there? I am in the tree part");
 		treeLabel.setHorizontalAlignment(JLabel.CENTER);
 		DEFAULT_TREE.getViewport().add(treeLabel);
 		mainPanel.add( DEFAULT_TREE, gridBagCstr );
 		
+		gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 0;
 		gridBagCstr.gridy = 2;
@@ -114,8 +114,7 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridheight = 1;
 		gridBagCstr.weightx = 0.4d;
 		gridBagCstr.weighty = 0.3d;
-		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.4);
-		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.4);
+
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
 		DEFAULT_INFO.getViewport().setBackground(Color.WHITE);
 		JLabel infoLable = new JLabel("Hello there? I am in the info part");
@@ -123,6 +122,7 @@ public class GUISystem implements Runnable {
 		DEFAULT_INFO.getViewport().add(infoLable);
 		mainPanel.add( DEFAULT_INFO, gridBagCstr);
 		
+		gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 1;
 		gridBagCstr.gridy = 1;
@@ -130,8 +130,6 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridheight = 2;
 		gridBagCstr.weightx = 0.6d;
 		gridBagCstr.weighty = 0.9d;
-		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.6);
-		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.9);
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
 		JLabel rightLable = new JLabel("Hello there? I am in the right part");
 		rightLable.setHorizontalAlignment(JLabel.CENTER);
@@ -175,6 +173,7 @@ public class GUISystem implements Runnable {
 				classNode.add(methodNode);
 			}
 			root.add(classNode);
+			System.out.println(root.getChildAt(0).getChildCount());
 		}
 		JTree classTree = new JTree(root);
 		classTree.addTreeSelectionListener( new TreeSelectionListener() {
@@ -196,7 +195,9 @@ public class GUISystem implements Runnable {
 			}
 		});
 
-		mainPanel.remove(DEFAULT_TREE);
+		DEFAULT_TREE.getViewport().remove(0);
+		DEFAULT_TREE.getViewport().revalidate();
+		
 		GridBagConstraints gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 0;
@@ -204,21 +205,19 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridwidth = 1;
 		gridBagCstr.gridheight = 1;
 		gridBagCstr.weightx = 0.4d;
-		gridBagCstr.weighty = 0.5d;
-		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * 0.456);
-		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * -0.115);
+		gridBagCstr.weighty = 0.6d;
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
 		Font font = classTree.getFont();
-		classTree.setFont(new Font(font.getName(), Font.PLAIN, 20) );
-		JScrollPane jsp = new JScrollPane();
-		
-		jsp.getViewport().add(classTree);
+		classTree.setFont(new Font(font.getName(), Font.PLAIN, 18) );
+		classTree.setVisibleRowCount(5);
 		classTree.setRootVisible(false);
+		classTree.setMinimumSize(new Dimension((int) (DEFAULT_SIZE_X * 0.4),(int) (DEFAULT_SIZE_Y * 0.6)));
 		for( int i = 0 ; i < classTree.getRowCount(); ) {
 			classTree.expandRow(i++);
 		}
-
-		mainPanel.add( jsp, gridBagCstr );
+		
+		DEFAULT_TREE.getViewport().add(classTree, gridBagCstr);
+		DEFAULT_TREE.getViewport().revalidate();
     	mainPanel.revalidate();
     	mainFrame.pack();
     	mainPanel.repaint();
@@ -335,30 +334,26 @@ public class GUISystem implements Runnable {
 	private static void memberList( List<Members> memberList ) {
 		DefaultListModel<String> dlm = new DefaultListModel<>();
 		dlm.addElement("Use:");
-		dlm.addElement("hh");
-		
 		for( Members members : memberList ) {
 			dlm.addElement(members.getName());
 		}
-		
-		System.out.println(mainPanel.getComponents().length);
-		mainPanel.remove(DEFAULT_INFO);
-		System.out.println(mainPanel.getComponents().length);
 
+		DEFAULT_INFO.getViewport().remove(0);
+		DEFAULT_INFO.getViewport().revalidate();
+		
 		GridBagConstraints gridBagCstr = new GridBagConstraints();
 		gridBagCstr.gridx = 0;
 		gridBagCstr.gridy = 2;
 		gridBagCstr.gridwidth =	1;
 		gridBagCstr.gridheight = 1;
-		gridBagCstr.weightx = 1.0d;
+		gridBagCstr.weightx = 0.4d;
 		gridBagCstr.weighty = 0.3d;
-		gridBagCstr.ipadx = (int) (DEFAULT_SIZE_X * -0.1);
-		gridBagCstr.ipady = (int) (DEFAULT_SIZE_Y * 0.144);
 		gridBagCstr.anchor = GridBagConstraints.CENTER;
 		JList<String> jList = new JList<>(dlm);
 		Font font = jList.getFont();
 		jList.setFont(new Font(font.getName(), font.getStyle(), 20) );
-		mainPanel.add( new JScrollPane( jList ), gridBagCstr );
+		jList.setMinimumSize(new Dimension((int) (DEFAULT_SIZE_X * 0.4),(int) (DEFAULT_SIZE_Y * 0.3)));
+		DEFAULT_INFO.getViewport().add(jList, gridBagCstr);
     	mainPanel.revalidate();
     	mainFrame.pack();
     	mainPanel.repaint();

@@ -150,11 +150,28 @@ public final class PMethod implements Methods, Parse {
 	@Override
 	public void setContents(String contents) {
 		this.contents = contents;
+		// TEST
+		String[] tests = { "array", "last", "size", "first" };
+		
+		for( String str : tests ) {
+			if( contents.contains(str)) {
+				PMember pMember = PMember.newInstance();
+				pMember.setMemberName(str);
+				memberList.add(pMember);
+			}
+		}
+		
+		// TODO: repalce to old
+		/* OLD
 		for( Members members : refClass.getMemberList() ) {
 			if( contents.contains( members.getName() ) &&
-					!memberList.contains(members) );
-			memberList.add(members);
+					!memberList.contains(members) ) {
+				memberList.add(members);
+				members.setRefMethod(this);
+				members.setRefClass(this.getRefClass());
+			}
 		}
+		*/
 	}
 
 	@Override
