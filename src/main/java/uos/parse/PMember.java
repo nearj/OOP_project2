@@ -1,165 +1,114 @@
 package uos.parse;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import uos.Type;
 
-public class PMember implements Members,Parse{
+public final class PMember implements Members {
 	
 	private Classes refClass;
-	private String refMethod;
+	private List<Methods> refMethodList = new ArrayList<>();
 	private String memberName;
-	private Type memberType;
-	private Map<String, Type> params = new HashMap<>();
-	private List<Members> memberList =  new ArrayList<>();
+	private Type returnType;
+	private MemberType memberType;
+	private Methods memberOfMember;
+	//PMember에는 Map이 없어도 되죠?
 	
-	private PMember() {}
-	
+	private PMember() {} 
 	
 	public static PMember newInstance() {
 		return new PMember();
 	}
-	
+
 	@Override
 	public void setRefClass(Classes classes) {
-		this.refClass=classes;
+		this.refClass = classes;
+		
 	}
-	
+
 	@Override
-	public Classes getRefClass(){
+	public Classes getRefClass() {
 		return refClass;
 	}
-	
+
 	@Override
 	public void setRefMethod(Methods methods) {
-		this.refMethod = methods;
-	}
-	
-	@Override
-	public String getRefMethod() {
-		return refMethod;
-	}
-	 
-	@Override
-	public List<Methods> getRefMethodList(){
-		
-	}
-	
-	@Override
-	public void setMemberType(Type type){
-		this.memberType=type;
-	}
-	
-	@Override
-	public Type getMemberType(){
-		return memberType;
-	}
-	
-	@Override
-	public void setMemberName(String name){
-		this.memberName = name;
-	}
-	
-	@Override
-	public String getMemberType(){
-		return memberType;
-	}
-	
-	@Override
-	public String findUsedMethods(String memberName) {
-		
+		refMethodList.add(methods);
 	}
 
-
 	@Override
-	public void setContents(String contents) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public String getContents() {
-		// TODO Auto-generated method stub
+	public Methods getRefMethod( String methodName ) {
+		for( Methods methods : refMethodList ) {
+			if(methods.getName().equals(methodName)) {
+				return methods;
+			} else return null;			
+		}
 		return null;
 	}
-
-
-	@Override
-	public Methods getRefMethod() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	@Override
 	public List<Methods> getRefMethodList() {
-		// TODO Auto-generated method stub
-		return null;
+		return refMethodList;
 	}
 
-
 	@Override
-	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
+	public Type getReturnType() {
+		return returnType;
 	}
 
-
 	@Override
-	public void setType() {
-		// TODO Auto-generated method stub
+	public void setReturnType(Type type) {
+		this.returnType=type;
 		
 	}
 
-
-	@Override
-	public boolean isArray() {
-		// TODO Auto-generated method stub
+	public boolean isArray(String memberName) {
+		if(memberName=="arr")
+			return false;
+		else if(memberName=="size")
+			return true;
+		else if(memberName=="first")
+			return true;
+		else if(memberName=="last")
+			return true;
 		return false;
 	}
-
-
+	
 	@Override
-	public String getArray() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setMemberType(String memberName) {
+		if(isArray(memberName)==true)
+			this.memberType=MemberType.DEFAULT;
+		else if(isArray(memberName)==false)
+			this.memberType=MemberType.ARRAY;
 	}
 
-
 	@Override
-	public void setName() {
-		// TODO Auto-generated method stub
-		
+	public MemberType getMemberType() {
+		return memberType;
 	}
 
+	
+
+	@Override
+	public void setName(String name) {
+		this.memberName=name;		
+	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return memberName;
 	}
 
-
 	@Override
-	public void setMember() {
-		// TODO Auto-generated method stub
+	public void setMember(Methods methods) {
+		this.memberOfMember=methods;
 		
 	}
 
-
 	@Override
-	public Members getMember() {
-		// TODO Auto-generated method stub
-		return null;
+	public Methods getMember() {
+		return memberOfMember;
 	}
-	
-	
-	
-	
-	
-	
-	
+
+}
