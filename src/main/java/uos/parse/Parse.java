@@ -10,13 +10,13 @@ public interface Parse {
 	
 	// --------------------------------- Name -----------------------------------
 	/**
-	 * Set contents of parsed data. 
+	 * Set contents of parse data. 
 	 * @param contents contents of data.
 	 */
 	public void setContents( String contents );
 	
 	/**
-	 * Return contents of parsed data. 
+	 * Return contents of parse data. 
 	 * @return contents of data.
 	 */
 	public String getContents();

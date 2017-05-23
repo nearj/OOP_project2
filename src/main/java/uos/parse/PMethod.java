@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+import uos.AccessModifier;
 import uos.Type;
 
 /**
@@ -27,6 +28,8 @@ public final class PMethod implements Methods, Parse {
 	private Classes refClass;
 	private String methodName;
 	private String contents;
+	private uos.AccessModifier am;
+	private MethodType methodType;
 	private Type returnType;
 	private Map<String, Type> params = new HashMap<>();
 	private List<Members> memberList = new ArrayList<>();
@@ -59,7 +62,7 @@ public final class PMethod implements Methods, Parse {
 	}
 
 	// < /Reference >
-	// < Name >
+	// < Information >
 	
 	@Override
 	public void setName( String methodName ) {
@@ -70,8 +73,27 @@ public final class PMethod implements Methods, Parse {
 	public String getName() {
 		return methodName;
 	}
+	@Override
+	public void setAccessModifier(AccessModifier am) {
+		this.am = am;
+	}
+
+	@Override
+	public AccessModifier getAccessModifier() {
+		return am;
+	}
+
+	@Override
+	public void setMethodType(MethodType methodType) {
+		this.methodType = methodType;
+	}
+
+	@Override
+	public MethodType getMethodType() {
+		return methodType;
+	}
 	
-	// < /Name >
+	// < /Information >
 	// < Return >
 	
 	@Override
@@ -167,7 +189,7 @@ public final class PMethod implements Methods, Parse {
 		for( Members members : refClass.getMemberList() ) {
 			if( contents.contains( members.getName() ) &&
 <<<<<<< Upstream, based on master
-					!memberList.contains(members) ) {
+				!memberList.contains(members) ) {
 				memberList.add(members);
 				members.setRefMethod(this);
 				members.setRefClass(this.getRefClass());
@@ -181,15 +203,13 @@ public final class PMethod implements Methods, Parse {
 		}
 <<<<<<< Upstream, based on master
 		*/
-=======
-		
->>>>>>> c7bdd2c (바꿈 ㅋㅋ)
 	}
 
 	@Override
 	public String getContents() {
 		return contents;
 	}
+
 
 	// < /Contents >
 	// -------------------------------- Method ----------------------------------

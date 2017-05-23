@@ -5,59 +5,107 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
-
-import uos.Accessor_Modifier;
+import uos.AccessModifier;
 import uos.Delim;
 import uos.Type;
+import uos.parse.Methods.MethodType;
 
+/**
+ * Parsing with requested source file(flankly speeking, just text contents) class. Implements 
+ * interface {@link Parse} and has class-list and file name. 
+ * 
+ * @author 2016920054_JUHAYONG
+ *
+ */
 public final class PSource implements Parse {
 
-	private String fileName;
-	private List<Classes> classList = new ArrayList<>();
-	private Object infoContent_Prev;
+	//========================================= < member > =========================================
 
+	private String fileName;
+	private List<Classes> classList = new ArrayList<>(); // List of classes with in source file
+
+	private PSource() {} // To prevent instantiation.
+	
+	//========================================= < member > =========================================
+	//========================================= < method > =========================================
+
+	// Return instance of PSource with static factory method.
 	public static PSource newInstance() {
 		return new PSource();
 	}
+
+	// < File name >
 	
-
-	enum MethodType {
-		Constructor, Method 
-	}
-
+	/**
+	 * Setting name of file(format: ###(name).###(extension))
+	 * 
+	 * @param fileName Name of file(format: ###(name).###(extenstion))
+	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
 	
+	/**
+	 * Get name of current source file(format: ###(name).###(extenstion))
+	 *  
+	 * @return Name of file(format: ###(name).###(extenstion))
+	 */
 	public String getFileName() {
 		return fileName;
 	}
 	
+	// < /File name >
 	// < Class list >
 	
+	/**
+	 * Append {@link Classes} to class-list in the source.
+	 * 
+	 * @param classes class to insert in class-list of source file.
+	 */
 	public void setClass( Classes classes ) {
 		classList.add(classes);
 	}
 
+	/**
+	 * Get {@link Classes} specified with index in class-list
+	 *  
+	 * @param index index of class-list to get class
+	 * @return specified class in class-list
+	 */
 	public Classes getKlass(int index) {
 		return classList.get(index);
 	}
 
+	/**
+	 * Clear class-list in source.
+	 */
 	public void clearClassList() {
 		classList.clear();
 	}
 	
+	/**
+	 * Get class-list in source. 
+	 * @return class-list in source.
+	 */
 	public List<Classes> getClassList() {
 		return classList;
 	}
 
     // < /Class List >
-		
+	// < Contents >
+
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * <p>Accept the complete source level contents which has multiple class in the source.<br> 
+	 * If format of contents is imcomplete, there could be unpredicted error.
+	 */
 	@Override
 	public void setContents(String contents) {
+		
 		Scanner scn = new Scanner(contents);
 		scn.useDelimiter(Delim.CLASS);
+		// Use scanner setting delimiter as "class" string with case sensitive.
 		
 		while( scn.hasNext() ) {
 			String totalContent = scn.next();
@@ -65,8 +113,10 @@ public final class PSource implements Parse {
 			// If scanned lines do not have content, break.
 			
 			String className = totalContent.substring( 
-					totalContent.lastIndexOf(Delim.CLASS) + 1,
-					totalContent.indexOf(Delim.INITIAL_OPEN) - 1 ).trim();
+					0, totalContent.indexOf(Delim.INITIAL_OPEN) - 1 ).trim();
+			// class name will be first first index of token, and before first index of
+			// Initialization.
+			
 			PClass pClass = PClass.newInstance();
 			pClass.setName(className);
 			classList.add(pClass);
@@ -79,7 +129,7 @@ public final class PSource implements Parse {
 					trim();
 			pClass.setContents(initContent);
 			initParser(initContent.replace(Delim.LINE_FEED, ""));
-			// Parsing class.
+			// Parsing initialization.
 			
 			String methodContents =
 					totalContent.substring( totalContent.indexOf(Delim.INITIAL_CLOSE) + 2 ).
@@ -90,6 +140,7 @@ public final class PSource implements Parse {
 		scn.close();
 	}
 
+	// TODO: with consensus, change to like eclipse.
 	@Override
 	public String getContents() {
 		StringBuilder strBuilder = new StringBuilder();
@@ -170,11 +221,11 @@ public final class PSource implements Parse {
 		// < Init: set scanner and accessor modifier >
 		Scanner initScn = new Scanner(initContent);
 		initScn.useDelimiter( Delim.COLON );
-		Accessor_Modifier acModifier = null;
+		AccessModifier acModifier = null;
 		if( initScn.hasNext() ) {
 			String initType = 
 					initScn.next().replace( Delim.LINE_FEED, Delim.BLANK ).trim();
-			acModifier = Accessor_Modifier.set(initType);
+			acModifier = AccessModifier.set(initType);
 		}
 		// < /Init >
 
@@ -194,66 +245,58 @@ public final class PSource implements Parse {
 				String lineContents = lineScn.next().trim();
 				if( !lineScn.hasNext() ) {
 					if( !lineContents.equals(Delim.BLANK) )
-						acModifier = Accessor_Modifier.set(lineContents);
+						acModifier = AccessModifier.set(lineContents);
 					break;
 				}
 				// If there is no more line at next scan, there will access modifier or
 				// nothing. Therefore if there is line set access modifier, if not just
 				// break;
+				
+				boolean isMember;
+				if( lineContents.contains(Delim.PARAMETER_OPEN) ) isMember = false;
+				else isMember = true;
+				// verify line content is method or member.
+				
+				Classes classes = 
+						classList.get( classList.size() - 1 );
+				if( isMember ) {    // If line content is member.
+					PMember pMember = PMember.newInstance();
+					pMember.setRefClass(classes);
+					// TODO: PMembmer stub.
 					
-				switch( acModifier ) {
+				} else {            // If line content is method.
+					PMethod pMethod = PMethod.newInstance();
+					pMethod.setRefClass(classes);
 					
-					// < Set method or constructor name and return type >
-					case PUBLIC: {
-						if( lineScn.hasNext() ) {
-							Classes classes = 
-									classList.get( classList.size() - 1 );
-							PMethod pMethod = PMethod.newInstance();
-							pMethod.setRefClass(classes);
-							
-							String methodInfo = lineContents.substring(
-									0, lineContents.indexOf(Delim.PARAMETER_OPEN) );
-
-							if( methodInfo.equals( classes.getName() ) ||
-									methodInfo.equals( "~" + classes.getName() ) ) {
-								
-								// TODO: Constructor stub
-							} else {
-								pMethod.setReturnType(
-										Type.set(
-												methodInfo.substring(
-														0, methodInfo.indexOf(" ") ).trim() ) );
-								pMethod.setName(
-										methodInfo.substring(
-												methodInfo.indexOf(" ") ).trim() );
-							}
-							classes.setMethod(pMethod);
-
-						}
-					} break;
-
-					case PRIVATE: {
-						/*
-						if( lineScn.hasNext() ) {
-							Classes classes = 
-									classList.get(classList.size() - 1 ); //
-							PMember pMember = PMember.newInstance();
-							pMember.setRefClass(classes);
-						}
-						while( lineScn.hasNext() ) {
-							// TODO: Parsed Member stub.
-							break;
-						}
-						*/
-
+					String methodInfo = lineContents.substring(
+							0, lineContents.indexOf(Delim.PARAMETER_OPEN) );
+					
+					if( methodInfo.equals( classes.getName() ) ) {
+						pMethod.setMethodType(MethodType.Constructor);
+					} else if( methodInfo.equals( "~" + classes.getName() ) ) {
+						pMethod.setMethodType(MethodType.Deconstructor);
+					} else {
+						pMethod.setMethodType(MethodType.Deconstructor);
 					}
+					
+					pMethod.setAccessModifier(acModifier);
+					pMethod.setName(
+							methodInfo.substring(
+									methodInfo.indexOf(" ") ).trim() );					
+					pMethod.setReturnType(
+							Type.set(
+									methodInfo.substring(
+											0, methodInfo.indexOf(" ") ).trim() ) );
+					classes.setMethod(pMethod);
 				}
 			}
 			lineScn.close();
 		}
 		initScn.close();
 	}
-
+	
+	// This method use method open source JDK 1.8 as a reference to trim only leading string.
+	// Reference: java.lang.String.trim()
 	private String trimLeading( String string ) {
         int len = string.length();
         int st = 0;
@@ -268,20 +311,23 @@ public final class PSource implements Parse {
 	
 	private void methodParser( String methodContents ) {
 		// < Init: set scanner with '{', '}' >
-
 		
 		Scanner methodScn = new Scanner(methodContents.
-				replace( Delim.CLAUSE_OPEN, Delim.CLAUSE_OPEN + Delim.SPACE));
+				replace( Delim.CLAUSE_OPEN + Delim.CLUASE_CLOSE,
+						Delim.CLAUSE_OPEN + Delim.SPACE + Delim.CLUASE_CLOSE) );
+		// To make non empty clauses. {} -> { }
 		methodScn.useDelimiter( 
 				"\\" + Delim.CLAUSE_OPEN + "?+" + "\\" + Delim.CLUASE_CLOSE ); 
 		// regex: \\{?\\}
 		// / '\\{' /g : Firstly, use clause open delimiter( curly braket )
 		// / '?' /g : Find '{' greedly once and not at all
 		// / '\\}' /g : following clause close delimiter.
-		// < /Init >
 		
+		// < /Init >
 		// < Contents parse >
-		String contents = methodScn.next() + "}";
+		
+		String contents = methodScn.next() + Delim.CLUASE_CLOSE;
+		// To restore '}'
 		
 		while( methodScn.hasNext() ) {
 			String tempContents = methodScn.next() + "}";
@@ -295,9 +341,11 @@ public final class PSource implements Parse {
 			}
 		}
 		
-		if( !contents.isEmpty() ) methodParseHelper(contents);
+		if( !contents.trim().isEmpty() ) methodParseHelper(contents);
 		
 		methodScn.close();
+		
+		// < /Contents pars >
 	}
 	
 	private void methodParseHelper( String contents ) {
@@ -305,7 +353,8 @@ public final class PSource implements Parse {
 		Classes classes = classList.get( classList.size() - 1 );
 		PMethod pMethod = null;
 		MethodType methodType = null;
-		String infoContent = contents.substring( 0, contents.indexOf( Delim.CLAUSE_OPEN ) ).trim();
+		String infoContent = contents.substring(
+				0, contents.indexOf( Delim.CLAUSE_OPEN ) ).trim();
 		String infoContent_Prev = infoContent.substring(
 				0, infoContent.indexOf( classes.getName() + Delim.ACCESSOR ) ).trim();
 		String infoContent_Post =
@@ -334,8 +383,7 @@ public final class PSource implements Parse {
 					pMethod.setParam(Type.NULL, "");
 					break;
 				}
-
-
+				
 				if( paramContent.contains( Delim.COMMA ) ) {
 					Scanner paramScn = new Scanner(paramContent);
 					paramScn.useDelimiter( Delim.COMMA );
@@ -343,7 +391,8 @@ public final class PSource implements Parse {
 
 					while( paramScn.hasNext() ) {
 						String paramName = 
-								paramElem.substring( 0, paramElem.indexOf(Delim.SPACE) - 1 );
+								paramElem.
+								substring( 0, paramElem.indexOf(Delim.SPACE) - 1 );
 
 
 						Type paramType = Type.set( paramElem.substring(
@@ -357,7 +406,9 @@ public final class PSource implements Parse {
 					String paramName = paramContent.substring(
 							paramContent.indexOf(" ") + 1 );
 
-					Type paramType = Type.set( paramContent.substring( 0, paramContent.indexOf(" ") ).trim() );
+					Type paramType = 
+							Type.set( paramContent.substring
+									( 0, paramContent.indexOf(" ") ).trim() );
 					pMethod.setParam(paramType, paramName);
 				}
 
@@ -368,16 +419,28 @@ public final class PSource implements Parse {
 		// < Set method name, return type, parameter information >
 		
 		// < set method contents >
-		String methodClauses = contents.substring( contents.indexOf( Delim.CLAUSE_OPEN ) + 1, 
+		String methodClauses = contents.substring(
+				contents.indexOf( Delim.CLAUSE_OPEN ) + 1, 
 				contents.lastIndexOf( Delim.CLUASE_CLOSE ) - 1).trim();
+
 		switch( methodType ) {
 			case Constructor:
-				// TODO: Constructor stub
+			case Deconstructor:
 				break;
 			case Method: {
-				pMethod.setContents( "  " + methodClauses );
+				if( methodClauses.lastIndexOf(Delim.LINE_FEED) - methodClauses.indexOf(Delim.LINE_FEED)
+						< 3 )
+					pMethod.setContents( methodClauses );
+				else 
+					pMethod.setContents( 
+							methodClauses.substring(
+									methodClauses.indexOf( Delim.LINE_FEED + 1 ),
+									methodClauses.lastIndexOf( Delim.LINE_FEED) - 1) );
 			}
 		}
 		// < set method contents >
 	}
+	
+	//========================================= < method > =========================================
+	// 2015920013 rlaxoghks
 }

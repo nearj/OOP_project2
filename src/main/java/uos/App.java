@@ -86,7 +86,7 @@ import uos.parse.PSource;
 // TODO-3rd: to carry out save file with GUI
 
 public class App {
-	private static PSource pSource = new PSource();
+	private static PSource pSource = PSource.newInstance();
 
 	public static void main(String... args) {
 		SwingUtilities.invokeLater( new GUISystem() );

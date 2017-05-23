@@ -3,6 +3,7 @@ package uos.parse;
 import java.util.List;
 import java.util.Map;
 
+import uos.AccessModifier;
 import uos.Type;
 
 /**
@@ -14,6 +15,10 @@ public interface Methods {
 	
 	// < Reference class >
 	
+	enum MethodType {
+		Constructor, Deconstructor, Method 
+	}
+
 	/**
 	 * Set reference {@link Classes} of the method.
 	 * @param classes reference class of the method.
@@ -27,7 +32,7 @@ public interface Methods {
 	public Classes getRefClass();
 	
 	// < /Reference class >
-	// < Name >
+	// < Information >
 	
 	/**
 	 * Set name of method.
@@ -41,7 +46,35 @@ public interface Methods {
 	 */
 	public String getName();
 	
-	// < /Name >
+	/**
+	 * Set modifier of method<br>
+	 * Type of access modifier: public, protected, private
+	 * @param am Access modifier of method.
+	 */
+	public void setAccessModifier( AccessModifier am );
+	
+	/**
+	 * Get modifier of method<br>
+	 * Type of access modifier: public, protected, private
+	 * @return Access modifier of method.
+	 */
+	public AccessModifier getAccessModifier();
+	
+	/**
+	 * Set type of method<br>
+	 * Type of method: Default, Constructor
+	 * @param methodType
+	 */
+	public void setMethodType( MethodType methodType );
+	
+	/**
+	 * Set type of method<br>
+	 * Type of method: Default, Constructor
+	 * @param methodType
+	 */
+	public MethodType getMethodType();
+	
+	// < /Information >
 	// < Return >
 	
 	/**
