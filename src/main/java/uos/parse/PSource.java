@@ -233,7 +233,6 @@ public final class PSource implements Parse {
 					} break;
 
 					case PRIVATE: {
-						/*
 						if( lineScn.hasNext() ) {
 							Classes classes = 
 									classList.get(classList.size() - 1 ); //
@@ -244,7 +243,6 @@ public final class PSource implements Parse {
 							// TODO: Parsed Member stub.
 							break;
 						}
-						*/
 
 					}
 				}
@@ -305,12 +303,12 @@ public final class PSource implements Parse {
 		Classes classes = classList.get( classList.size() - 1 );
 		PMethod pMethod = null;
 		MethodType methodType = null;
-		String infoContent = contents.substring( 0, contents.indexOf( Delim.CLAUSE_OPEN ) ).trim();
+		String infoContent = contents.substring( 0, contents.indexOf( Delim.CLAUSE_OPEN ) ).trim(); // bool QUEUE::IsEmpty()
 		String infoContent_Prev = infoContent.substring(
-				0, infoContent.indexOf( classes.getName() + Delim.ACCESSOR ) ).trim();
+				0, infoContent.indexOf( classes.getName() + Delim.ACCESSOR ) ).trim(); // bool
 		String infoContent_Post =
 				infoContent.substring( infoContent.indexOf( classes.getName() + Delim.ACCESSOR )
-						+ ( classes.getName() + Delim.ACCESSOR).length() );
+						+ ( classes.getName() + Delim.ACCESSOR).length() ); // IsEmpty
 		
 		// < Setting method or constructor return type >				
 		if( infoContent_Prev.equals("") ) methodType = MethodType.Constructor;

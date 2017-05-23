@@ -155,8 +155,8 @@ public final class PMethod implements Methods, Parse {
 			if( contents.contains( members.getName() ) &&
 					!memberList.contains(members) ){
 				memberList.add(members);
-				// members.setRefMethods(this);
-				// members.setRefClass(this.getRefClass());
+				// members.setRefMethods((Methods) this);
+				members.setRefClass(this.getRefClass());
 			}
 		}
 		
