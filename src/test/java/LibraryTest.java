@@ -27,25 +27,10 @@ import java.awt.event.*;
 public class LibraryTest {
 	
     @Test public void testSomeLibraryMethod() {
-    	String test = "Queue::Queue(void) {\nsize = 10;\nlast = 0;\nfirst = 0;\n}\nQueue::~Queue(void) {}\nbool Queue::IsEmpty() {\nif( (last) % size == first )\nreturn true;\nelse return false;\n}\nbool Queue::IsFull() {\nif( ( last + 1 ) % == first  )\nreturn true;\nelse return false;\n}\nvoid Queue::EnQueue( int data ) {\n  if( Queue::isFull() ) {\n    arr[last] = data;\n    last = ( last + 1 ) % size;\n{absd}\n{xzxcv}\n{asdf}\n  }\n}\nint Queue::DeQueue() {\nif( Queue::isEmpty() ) {\nreturn arr[first++];\nfirst = ( first + 1 ) % size;\n  }\n}\n";
-    	Scanner scn = new Scanner(test);
-    	scn.useDelimiter("\\{?+\\}");
-    	String saver = "";
-    	int i = 0;
-    	while(scn.hasNext()) {
-			String temp = scn.next() + "}";
-			if( !scn.hasNext() )
-				break;
-    		if( trim(temp.toCharArray()).indexOf("{") <= 0 ) {
-    			saver = saver + temp;
-    			continue;
-    		} else {
-    			System.out.println( "----" + i++ + "----\n" + trim(saver.toCharArray()) );
-    			saver = temp;
-    		}
-    	}
-    	System.out.println(trim(saver.toCharArray()));
-    	scn.close();
+    	
+    	String test = "{aasdf  f\n\n}";
+    	String s = toCleanClauses(test);
+    	System.out.println( s );
     }
     
     public String trim( char[] value ) {
@@ -59,5 +44,48 @@ public class LibraryTest {
         return ((st > 0) || (len < value.length)) ? String.copyValueOf(value).substring(st, len) 
         		: String.copyValueOf(value);
     }
+    
+    private String toCleanClauses( String clauses) {
+		char[] val = clauses.toCharArray();
+		int st = 0;
+		int ed = val.length - 1;
+		
+		outerloop:
+		for( int i = st + 1; i < ed; i++ ) {
+			if( val[i] == '\n' || val[i] == '\r' ) {
+				for( int j = i + 1; j < ed; j++ ) {
+					if( val[j] == '\n' || val[j] == '\r' ) {
+						i = j - 1;
+						break;
+					}
+					
+					if( val[j] >= '!' ) {
+						st = i;
+						break outerloop;
+					}
+				}
+			}
+		}
+		
+		outerloop:
+		for( int i = ed - 1; i > st; i-- ) {
+			if( val[i] == '\n' || val[i] == '\r' ) {
+				for( int j = i - 1; j > st; j-- ) {
+					if( val[j] == '\n' || val[j] == '\r' ) {
+						i = j + 1;
+						break;
+					}
+					
+					if( val[j] >= '!' ) {
+						ed = i;
+						break outerloop;
+					}
+				}
+			}
+		}
+		
+		return clauses.substring(st + 1, ed);
+	}
+	
 }
 

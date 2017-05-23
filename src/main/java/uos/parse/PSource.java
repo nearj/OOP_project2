@@ -124,11 +124,11 @@ public final class PSource implements Parse {
 			// Set name of class and use the name as Delimiter.
 			
 			String initContent = 
-					totalContent.substring( totalContent.indexOf(Delim.INITIAL_OPEN) + 1,
-					totalContent.indexOf(Delim.INITIAL_CLOSE) - 1 ).
+					totalContent.substring( totalContent.indexOf(Delim.INITIAL_OPEN),
+					totalContent.indexOf(Delim.INITIAL_CLOSE) + 1 ).
 					trim();
-			pClass.setContents(initContent);
-			initParser(initContent.replace(Delim.LINE_FEED, ""));
+			pClass.setContents(toCleanClauses(initContent));
+			initParser(toCleanClauses(initContent).replace(Delim.LINE_FEED, ""));
 			// Parsing initialization.
 			
 			String methodContents =
@@ -140,7 +140,6 @@ public final class PSource implements Parse {
 		scn.close();
 	}
 
-	// TODO: with consensus, change to like eclipse.
 	@Override
 	public String getContents() {
 		StringBuilder strBuilder = new StringBuilder();
@@ -262,7 +261,7 @@ public final class PSource implements Parse {
 				if( isMember ) {    // If line content is member.
 					PMember pMember = PMember.newInstance();
 					pMember.setRefClass(classes);
-					// TODO: PMembmer stub.
+					
 					
 				} else {            // If line content is method.
 					PMethod pMethod = PMethod.newInstance();
@@ -276,37 +275,32 @@ public final class PSource implements Parse {
 					} else if( methodInfo.equals( "~" + classes.getName() ) ) {
 						pMethod.setMethodType(MethodType.Deconstructor);
 					} else {
-						pMethod.setMethodType(MethodType.Deconstructor);
+						pMethod.setMethodType(MethodType.Default);
 					}
 					
 					pMethod.setAccessModifier(acModifier);
-					pMethod.setName(
-							methodInfo.substring(
-									methodInfo.indexOf(" ") ).trim() );					
-					pMethod.setReturnType(
-							Type.set(
+					switch( pMethod.getMethodType() ) {
+						case Constructor:
+						case Deconstructor:
+							pMethod.setName(methodInfo);
+							break;
+						case Default: {
+							pMethod.setName(
 									methodInfo.substring(
-											0, methodInfo.indexOf(" ") ).trim() ) );
+											methodInfo.indexOf(" ") ).trim() );					
+							pMethod.setReturnType(
+									Type.set(
+											methodInfo.substring(
+													0, methodInfo.indexOf(" ") ).trim() ) );
+						}
+						break;
+					}
 					classes.setMethod(pMethod);
 				}
 			}
 			lineScn.close();
 		}
 		initScn.close();
-	}
-	
-	// This method use method open source JDK 1.8 as a reference to trim only leading string.
-	// Reference: java.lang.String.trim()
-	private String trimLeading( String string ) {
-        int len = string.length();
-        int st = 0;
-        char[] val = string.toCharArray();    /* avoid getfield opcode */
-
-        while ((st < len) && (val[st] <= ' ')) {
-            st++;
-        }
-        return ((st > 0) || (len < string.length())) ? string.substring(st, len) 
-        		: string;
 	}
 	
 	private void methodParser( String methodContents ) {
@@ -349,10 +343,9 @@ public final class PSource implements Parse {
 	}
 	
 	private void methodParseHelper( String contents ) {
-
+		
 		Classes classes = classList.get( classList.size() - 1 );
 		PMethod pMethod = null;
-		MethodType methodType = null;
 		String infoContent = contents.substring(
 				0, contents.indexOf( Delim.CLAUSE_OPEN ) ).trim();
 		String infoContent_Prev = infoContent.substring(
@@ -361,86 +354,121 @@ public final class PSource implements Parse {
 				infoContent.substring( infoContent.indexOf( classes.getName() + Delim.ACCESSOR )
 						+ ( classes.getName() + Delim.ACCESSOR).length() );
 		
-		// < Setting method or constructor return type >				
-		if( infoContent_Prev.equals("") ) methodType = MethodType.Constructor;
-		else methodType = MethodType.Method;
-		// < /Setting method or constructor return type >
+
 		// < Setting name and parameter >
 		String methodName = infoContent_Post.
 				substring( 0, infoContent_Post.indexOf(Delim.PARAMETER_OPEN) ).trim();
-		String paramContent = infoContent_Post.
-				substring( infoContent_Post.indexOf(Delim.PARAMETER_OPEN) + 1,
-						infoContent_Post.indexOf(Delim.PARAMETER_CLOSE) ).trim();
+		String paramContent = infoContent_Post.substring( infoContent_Post.indexOf(Delim.PARAMETER_OPEN) ).
+				replaceAll("["+ Delim.PARAMETER_OPEN +	Delim.PARAMETER_CLOSE + "]", "").trim();
+		// Repalce (...) to ()
 
 		pMethod = (PMethod) classes.getMethod(methodName);
 
-		switch( methodType ) {
-			case Constructor:
-				// TODO: Constructor stub.
-				break;
-			case Method: {
-				if( paramContent.equals("") ) {
-					pMethod.setParam(Type.NULL, "");
-					break;
-				}
-				
-				if( paramContent.contains( Delim.COMMA ) ) {
-					Scanner paramScn = new Scanner(paramContent);
-					paramScn.useDelimiter( Delim.COMMA );
-					String paramElem = paramScn.next().trim();
+		if( paramContent.contains( Delim.COMMA ) ) {
+			Scanner paramScn = new Scanner(paramContent);
+			paramScn.useDelimiter( Delim.COMMA );
 
-					while( paramScn.hasNext() ) {
-						String paramName = 
-								paramElem.
-								substring( 0, paramElem.indexOf(Delim.SPACE) - 1 );
+			while( paramScn.hasNext() ) {
+				String paramElem = paramScn.next().trim();
 
+				String paramName = paramElem.
+						substring( 0, paramElem.indexOf(Delim.SPACE) - 1 );
+				Type paramType = Type.set( paramElem.substring(
+						paramElem.indexOf(Delim.SPACE) + 1).trim() );
+				pMethod.setParam(paramType, paramName);
+			}
+			paramScn.close();
 
-						Type paramType = Type.set( paramElem.substring(
-								paramElem.indexOf(Delim.SPACE) + 1).trim() );
-						pMethod.setParam(paramType, paramName);
-					}
-					paramScn.close();
+		} else if( paramContent.contains(Delim.SPACE) ) {
 
-				} else if( !paramContent.trim().equals("") ) {
+			String paramName = paramContent.substring(
+					paramContent.indexOf(" ") + 1 );
 
-					String paramName = paramContent.substring(
-							paramContent.indexOf(" ") + 1 );
-
-					Type paramType = 
-							Type.set( paramContent.substring
-									( 0, paramContent.indexOf(" ") ).trim() );
-					pMethod.setParam(paramType, paramName);
-				}
-
-				pMethod.setName(methodName);
-				pMethod.setReturnType( Type.set( infoContent_Prev ) );
-			} break;
+			Type paramType = 
+					Type.set( paramContent.substring
+							( 0, paramContent.indexOf(" ") ).trim() );
+			pMethod.setParam(paramType, paramName);
+		} else if( !paramContent.equals(Delim.BLANK) ) {
+			Type paramType = 
+					Type.set( paramContent.trim() );
+			pMethod.setParam(paramType, Delim.BLANK);
+		} else {
+			pMethod.setParam(Type.NULL, Delim.BLANK);
 		}
+
+		pMethod.setName(methodName);
+		pMethod.setReturnType( Type.set( infoContent_Prev ) );
+
 		// < Set method name, return type, parameter information >
 		
 		// < set method contents >
 		String methodClauses = contents.substring(
-				contents.indexOf( Delim.CLAUSE_OPEN ) + 1, 
-				contents.lastIndexOf( Delim.CLUASE_CLOSE ) - 1).trim();
-
-		switch( methodType ) {
-			case Constructor:
-			case Deconstructor:
-				break;
-			case Method: {
-				if( methodClauses.lastIndexOf(Delim.LINE_FEED) - methodClauses.indexOf(Delim.LINE_FEED)
-						< 3 )
-					pMethod.setContents( methodClauses );
-				else 
-					pMethod.setContents( 
-							methodClauses.substring(
-									methodClauses.indexOf( Delim.LINE_FEED + 1 ),
-									methodClauses.lastIndexOf( Delim.LINE_FEED) - 1) );
-			}
-		}
+				contents.indexOf( Delim.CLAUSE_OPEN ), 
+				contents.lastIndexOf( Delim.CLUASE_CLOSE ) + 1);
+		
+		pMethod.setContents( toCleanClauses(methodClauses) );
 		// < set method contents >
 	}
+
+	// This method use method open source JDK 1.8 as a reference to trim only leading string.
+	// Reference: java.lang.String.trim()
+	private String trimLeading( String string ) {
+	    int len = string.length();
+	    int st = 0;
+	    char[] val = string.toCharArray();    /* avoid getfield opcode */
 	
+	    while ((st < len) && (val[st] <= ' ')) {
+	        st++;
+	    }
+	    return ((st > 0) || (len < string.length())) ? string.substring(st, len) 
+	    		: string;
+	}
+
+	// Trim unnecessary contents, as make the line which contains not only escape character to first line
+	// and make the line which contains the characters as to the last.
+	// 
+	// Although this method get desired result usally, because this method check lines by '!'(U+0031)
+	// it not always assure a correct one.
+	private String toCleanClauses( String clauses) {
+		char[] val = clauses.toCharArray();
+		int st = 0;
+		int ed = val.length - 1;
+		
+		outerloop:
+		for( int i = st + 1; i < ed; i++ ) {
+			if( val[i] == '\n' || val[i] == '\r' ) {
+				for( int j = i + 1; j < ed; j++ ) {
+					if( val[j] == '\n' || val[j] == '\r' ) {
+						i = j - 1;
+						break;
+					}
+					
+					if( val[j] >= '!' ) {
+						st = i;
+						break outerloop;
+					}
+				}
+			}
+		}
+		
+		outerloop:
+		for( int i = ed - 1; i > st; i-- ) {
+			if( val[i] == '\n' || val[i] == '\r' ) {
+				for( int j = i - 1; j > st; j-- ) {
+					if( val[j] >= '!' ) {
+						ed = i;
+						break outerloop;
+					}
+					
+					if( val[j] == '\n' || val[j] == '\r' ) {
+						i = j + 1;
+						break;
+					}
+				}
+			}
+		}
+		return clauses.substring(st + 1, ed);
+	}
+
 	//========================================= < method > =========================================
-	// 2015920013 rlaxoghks
 }

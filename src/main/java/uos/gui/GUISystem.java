@@ -168,7 +168,6 @@ public class GUISystem implements Runnable {
 				classNode.add(methodNode);
 			}
 			root.add(classNode);
-			System.out.println(root.getChildAt(0).getChildCount());
 		}
 		JTree classTree = new JTree(root);
 		classTree.addTreeSelectionListener( new TreeSelectionListener() {

@@ -6,6 +6,9 @@ import uos.Type;
 
 public interface Members{
 	
+	public enum MemberType {
+		DEFAULT, ARRAY;
+	}
 	// < Reference class >
 	
 	/**
@@ -33,24 +36,24 @@ public interface Members{
 	 * Return reference {@link Methods} of the member.
 	 * @return the reference method of the member.
 	 */
-	public Methods getRefMethod();
+	public Methods getRefMethod( String methodName );
 
 	/**
 	 * Return reference {@link List} of {@link Methods} related to the member.
 	 * @return the reference method-list of the member.
 	 */
-	public List<Methods> getRefMethodList();
+	public List<Methods> getRefMethodList( );
 
 	// < /Reference class >
 
-	public Type getType();
-	public void setType();
-	public boolean isArray();
-	public String getArray();
-	
-	public void setName();
+	public Type getReturnType();
+	public void setReturnType(Type type);
+	public boolean isArray(String memberName);
+	public MemberType getMemberType();
+	public void setMemberType(String memberType);
+	public void setName(String name);
 	public String getName();
 	
-	public void setMember();
-	public Members getMember();
+	public void setMember(Methods methods);
+	public Methods getMember();
 }

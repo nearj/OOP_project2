@@ -16,7 +16,7 @@ public interface Methods {
 	// < Reference class >
 	
 	enum MethodType {
-		Constructor, Deconstructor, Method 
+		Constructor, Deconstructor, Default 
 	}
 
 	/**
