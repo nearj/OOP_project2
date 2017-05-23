@@ -200,6 +200,16 @@ public final class PMethod implements Methods, Parse {
 				// members.setRefClass(this.getRefClass());
 >>>>>>> c7bdd2c (바꿈 ㅋㅋ)
 			}
+					!memberList.contains(members) ){
+				memberList.add(members);
+				// members.setRefMethods((Methods) this);
+				members.setRefClass(this.getRefClass());
+			}
+					!memberList.contains(members) ){
+				memberList.add(members);
+				// members.setRefMethods((Methods) this);
+				members.setRefClass(this.getRefClass());
+			}
 		}
 <<<<<<< Upstream, based on master
 		*/
