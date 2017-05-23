@@ -2,7 +2,7 @@ package uos.parse;
 
 public interface Constructors {
 	
-	//constructor´Â  List ÇÊ¿ä¾ø´Â°ÅÁÒ?
+	//constructorï¿½ï¿½  List ï¿½Ê¿ï¿½ï¿½ï¿½Â°ï¿½ï¿½ï¿½?
 	
 	public void setRefClass( Classes classes );
 	
