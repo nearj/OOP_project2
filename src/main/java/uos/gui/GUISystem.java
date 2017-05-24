@@ -3,6 +3,7 @@ package uos.gui;
 import java.io.File;
 
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Iterator;
 
 import java.awt.Color;
@@ -28,17 +29,24 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
+import javax.swing.JViewport;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import org.omg.CORBA.Object;
+
 import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.table.DefaultTableModel;
 
-
+import uos.Delim;
 import uos.file.FileSystem;
 import uos.parse.Classes;
 import uos.parse.Members;
 import uos.parse.Methods;
+import uos.parse.PClass;
+import uos.parse.PMethod;
 import uos.parse.PSource;
 
 
@@ -60,7 +68,7 @@ public class GUISystem implements Runnable {
 			new JScrollPane(); 
 	private static final JScrollPane DEFAULT_INFO = 
 			new JScrollPane();
-	private static GridBagConstraints gridBagCstr = new GridBagConstraints();
+
 	@Override
 	public void run() {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -149,7 +157,7 @@ public class GUISystem implements Runnable {
 				}
 			};
 
-			for( Methods methods : classes.getMethodList() ){
+			for( Methods methods : classes.getMethodList() ) {
 				DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(methods) {
 					private static final long serialVersionUID = -6298724158229241038L;
 
@@ -167,6 +175,24 @@ public class GUISystem implements Runnable {
 				};
 				classNode.add(methodNode);
 			}
+			
+			for( Members members : classes.getMemberList() ) {
+				DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode(members) {
+					private static final long serialVersionUID = -6298724158229241038L;
+
+					@Override public String toString() {
+						StringBuilder strBuilder = new StringBuilder();
+						strBuilder.append( members.getName() + ": " + 
+							members.getReturnType().getTypeName() );
+						// #2
+						if( members.isArray() ) 
+							strBuilder.append(Delim.ARRAY_OPEN + Delim.ARRAY_CLOSE);
+						return strBuilder.toString();
+					}
+				};
+				classNode.add(methodNode);
+			}
+
 			root.add(classNode);
 		}
 		JTree classTree = new JTree(root);
@@ -178,14 +204,37 @@ public class GUISystem implements Runnable {
 						(DefaultMutableTreeNode) e.getPath().getLastPathComponent();
 				if( nodeObj.getUserObject() instanceof Classes ) {
 					// TODO: table stub.
-					System.out.println( ((Classes) nodeObj.getUserObject()).getName() );
+					System.out.println( ((PClass) nodeObj.getUserObject()).getContents() );
 				} else if ( nodeObj.getUserObject() instanceof Methods ) {
-					memberList(((Methods) nodeObj.getUserObject()).getMemberList());
+					drawList( ((Methods) nodeObj.getUserObject()).getMemberList() );
 				} else if ( nodeObj.getUserObject() instanceof Members ) {
-					// TODO: member stub.
-					System.out.println("members");
+					// =============================== table ref, JUHAYONG ===================================
+
+					
+					Members members = (Members) nodeObj.getUserObject();
+					StringBuilder strBuilder = new StringBuilder();
+					
+					// #1
+					ListIterator<Methods> listIterator = 
+							members.getRefMethodList().listIterator();
+					while( listIterator.hasNext() ) {
+						PMethod pMethod = (PMethod) listIterator.next();
+						strBuilder.append(pMethod.getField().trim());
+						if( !listIterator.hasNext() ) break;
+						strBuilder.append(", ");
+					}
+					String[] columnNames = { "Name", "methods" };
+					String[][] data = { { members.getName(), strBuilder.toString() } };
+					
+					DefaultTableModel dm = new DefaultTableModel(data, columnNames);
+					JTable memberRefTable = new JTable(dm);
+					DEFAULT_RIGHT.getViewport().remove(0);
+					DEFAULT_RIGHT.getViewport().revalidate();
+					DEFAULT_RIGHT.getViewport().add(memberRefTable);
+
+					mainPanel.revalidate();
+					// =============================== table ref, JUHAYONG ===================================
 				}
-				
 			}
 		});
 
@@ -264,6 +313,8 @@ public class GUISystem implements Runnable {
 		    	
 		    	int retVal = jFileChooser.showOpenDialog(null);
 		    	if( retVal == JFileChooser.APPROVE_OPTION ) {
+		    		if(pSource != null )
+		    			pSource.clearClassList();
 		    		pSource = FileSystem.read( jFileChooser.getSelectedFile() );
 		    		classTree();
 		    	} else if( retVal == JFileChooser.CANCEL_OPTION );
@@ -325,7 +376,7 @@ public class GUISystem implements Runnable {
 		jmb.add(jmFile);
 	}
 	
-	private static void memberList( List<Members> memberList ) {
+	private static void drawList( List<Members> memberList ) {
 		DefaultListModel<String> dlm = new DefaultListModel<>();
 		dlm.addElement("Use:");
 		for( Members members : memberList ) {
@@ -352,5 +403,4 @@ public class GUISystem implements Runnable {
     	mainFrame.pack();
     	mainPanel.repaint();
 	}
-
 }

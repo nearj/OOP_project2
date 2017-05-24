@@ -1,7 +1,6 @@
 package uos.parse;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -38,7 +37,6 @@ public final class PSource implements Parse {
 	
 	/**
 	 * Setting name of file(format: ###(name).###(extension))
-	 * 
 	 * @param fileName Name of file(format: ###(name).###(extenstion))
 	 */
 	public void setFileName(String fileName) {
@@ -47,7 +45,6 @@ public final class PSource implements Parse {
 	
 	/**
 	 * Get name of current source file(format: ###(name).###(extenstion))
-	 *  
 	 * @return Name of file(format: ###(name).###(extenstion))
 	 */
 	public String getFileName() {
@@ -59,7 +56,6 @@ public final class PSource implements Parse {
 	
 	/**
 	 * Append {@link Classes} to class-list in the source.
-	 * 
 	 * @param classes class to insert in class-list of source file.
 	 */
 	public void setClass( Classes classes ) {
@@ -68,7 +64,6 @@ public final class PSource implements Parse {
 
 	/**
 	 * Get {@link Classes} specified with index in class-list
-	 *  
 	 * @param index index of class-list to get class
 	 * @return specified class in class-list
 	 */
@@ -77,13 +72,6 @@ public final class PSource implements Parse {
 	}
 
 	/**
-	 * Clear class-list in source.
-	 */
-	public void clearClassList() {
-		classList.clear();
-	}
-	
-	/**
 	 * Get class-list in source. 
 	 * @return class-list in source.
 	 */
@@ -91,9 +79,42 @@ public final class PSource implements Parse {
 		return classList;
 	}
 
-    // < /Class List >
-	// < Contents >
+	/**
+	 * Clear class-list in source.
+	 */
+	public void clearClassList() {
+		classList.clear();
+	}
 
+    @Override
+	public String getContents() {
+		StringBuilder strBuilder = new StringBuilder();
+		
+		// < Class specification >
+		for( Classes classes : classList ) {
+			PClass pClass = (PClass) classes;
+			strBuilder.append( 
+					pClass.getField() + Delim.INITIAL_OPEN + Delim.LINE_FEED +
+					pClass.getContents() + Delim.LINE_FEED + Delim.INITIAL_CLOSE + 
+					Delim.LINE_FEED + Delim.LINE_FEED );
+			for( Methods methods : classes.getMethodList() ) {
+				PMethod pMethod = (PMethod) methods;
+				strBuilder.append( 
+						pMethod.getField() + Delim.CLAUSE_OPEN +
+						Delim.LINE_FEED + pMethod.getContents() + 
+						Delim.LINE_FEED + Delim.CLUASE_CLOSE );
+			}
+			if( classList.indexOf(classes) != classList.size() - 1 ) {
+				strBuilder.append( Delim.LINE_FEED + Delim.LINE_FEED );
+			}
+		}
+		// < Class specification >
+		return strBuilder.toString();
+	}
+
+	// < /Class List >
+	// < Contents >
+	
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -128,7 +149,7 @@ public final class PSource implements Parse {
 					totalContent.indexOf(Delim.INITIAL_CLOSE) + 1 ).
 					trim();
 			pClass.setContents(toCleanClauses(initContent));
-			initParser(toCleanClauses(initContent).replace(Delim.LINE_FEED, ""));
+			initParser(toCleanClauses(initContent).replace(Delim.LINE_FEED, Delim.BLANK));
 			// Parsing initialization.
 			
 			String methodContents =
@@ -138,26 +159,6 @@ public final class PSource implements Parse {
 			// Parsing method, since initialization close is };
 		}
 		scn.close();
-	}
-
-	@Override
-	public String getContents() {
-		StringBuilder strBuilder = new StringBuilder();
-		
-		// < Class specification >
-		for( Classes classes : classList ) {
-			PClass pClass = (PClass) classes;
-			strBuilder.append( pClass.getField() + Delim.INITIAL_OPEN + Delim.LINE_FEED +
-					pClass.getContents() + Delim.INITIAL_CLOSE + Delim.LINE_FEED );
-			for( Methods methods : classes.getMethodList() ) {
-				PMethod pMethod = (PMethod) methods;
-				strBuilder.append( pMethod.getField() + Delim.CLAUSE_OPEN +
-						Delim.LINE_FEED + pMethod.getContents() + Delim.ARRAY_CLOSE +
-						Delim.LINE_FEED );
-			}
-		}
-		// < Class specification >
-		return strBuilder.toString();
 	}
 
 	private void initParser( String initContent ) {
@@ -275,10 +276,13 @@ public final class PSource implements Parse {
 		// To make non empty clauses. {} -> { }
 		methodScn.useDelimiter( 
 				"\\" + Delim.CLAUSE_OPEN + "?+" + "\\" + Delim.CLUASE_CLOSE ); 
-		// regex: \\{?\\}
-		// / '\\{' /g : Firstly, use clause open delimiter( curly braket )
-		// / '?' /g : Find '{' greedly once and not at all
-		// / '\\}' /g : following clause close delimiter.
+		/* regex: {?}, java syntax: (?<=\\{)\\}
+		 * '\\{'    : Firstly, use clause open capturing group
+		 * '?+'   : Matches between zero and one times, as many times as possible, without giving back
+		 * '\\}'    : with '}' character.
+		 * 
+		 * Honestly, just '}' has almost same effect, except performance for large contents. 
+		 */
 		
 		// < /Init >
 		// < Contents parse >
@@ -287,9 +291,9 @@ public final class PSource implements Parse {
 		// To restore '}'
 		
 		while( methodScn.hasNext() ) {
-			String tempContents = methodScn.next() + "}";
+			String tempContents = methodScn.next() + Delim.CLUASE_CLOSE;
 			
-			if( trimLeading(tempContents).indexOf("{") <= 0 ) {
+			if( trimLeading(tempContents).indexOf(Delim.CLAUSE_OPEN) <= 0 ) {
 				contents = contents + tempContents;
 				continue;
 			} else {
@@ -323,7 +327,7 @@ public final class PSource implements Parse {
 		String methodName = infoContent_Post.
 				substring( 0, infoContent_Post.indexOf(Delim.PARAMETER_OPEN) ).trim();
 		String paramContent = infoContent_Post.substring( infoContent_Post.indexOf(Delim.PARAMETER_OPEN) ).
-				replaceAll("["+ Delim.PARAMETER_OPEN +	Delim.PARAMETER_CLOSE + "]", "").trim();
+				replaceAll("["+ Delim.PARAMETER_OPEN +	Delim.PARAMETER_CLOSE + "]", Delim.BLANK).trim();
 		// Repalce (...) to ()
 
 		pMethod = (PMethod) classes.getMethod(methodName);
@@ -434,6 +438,5 @@ public final class PSource implements Parse {
 		}
 		return clauses.substring(st + 1, ed);
 	}
-
 	//========================================= < method > =========================================
 }
