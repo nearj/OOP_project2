@@ -4,6 +4,7 @@ import java.io.File;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Iterator;
 
 import java.awt.Color;
@@ -41,6 +42,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
 import uos.Delim;
+import uos.Type;
 import uos.file.FileSystem;
 import uos.parse.Classes;
 import uos.parse.Members;
@@ -217,17 +219,30 @@ public class GUISystem implements Runnable {
 					// #1
 					ListIterator<Methods> listIterator = 
 							members.getRefMethodList().listIterator();
+					
 					while( listIterator.hasNext() ) {
-						PMethod pMethod = (PMethod) listIterator.next();
-						strBuilder.append(pMethod.getField().trim());
+						Methods methods = listIterator.next();
+						strBuilder.append( methods.getName() + Delim.PARAMETER_OPEN );
+						Map<String, Type> map = methods.getParams();
+						int i = 0;
+						for( String str : map.keySet() ){
+							strBuilder.append(map.get(str).getTypeName());
+							if( ++i == map.size() ) break;
+							strBuilder.append(", ");								
+						}
+						strBuilder.append(Delim.PARAMETER_CLOSE);
 						if( !listIterator.hasNext() ) break;
 						strBuilder.append(", ");
 					}
+					
 					String[] columnNames = { "Name", "methods" };
 					String[][] data = { { members.getName(), strBuilder.toString() } };
 					
 					DefaultTableModel dm = new DefaultTableModel(data, columnNames);
 					JTable memberRefTable = new JTable(dm);
+					Font font = memberRefTable.getFont();
+					
+					memberRefTable.setFont( new Font(font.getFontName(), font.getStyle(), 15) );
 					DEFAULT_RIGHT.getViewport().remove(0);
 					DEFAULT_RIGHT.getViewport().revalidate();
 					DEFAULT_RIGHT.getViewport().add(memberRefTable);
