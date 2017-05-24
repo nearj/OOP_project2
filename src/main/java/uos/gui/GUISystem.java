@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Iterator;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -51,46 +53,33 @@ public class GUISystem implements Runnable {
 
 	private static final int DEFAULT_SIZE_X = 959;
 	private static final int DEFAULT_SIZE_Y = 757;
-	private int size_x = DEFAULT_SIZE_X;
-	private int size_y = DEFAULT_SIZE_Y;
 	private static PSource pSource;
 	
 	private static JFrame mainFrame = new JFrame();
 	private static JPanel mainPanel = new JPanel( new GridBagLayout() );
 	private static JMenuBar jmb = new JMenuBar();
-	
 	private static final JScrollPane DEFAULT_TREE =
-			new JScrollPane(); 
-	private static final JScrollPane DEFAULT_RIGHT =
-			new JScrollPane(); 
+			new JScrollPane();
 	private static final JScrollPane DEFAULT_INFO = 
 			new JScrollPane();
 
 	@Override
 	public void run() {
+
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setBackground(Color.BLACK);
-		mainPanel.setBackground(Color.WHITE);
-		mainFrame.add(mainPanel);
 		mainFrame.setTitle("UOS OOP class 2nd project - parsing program");
 		mainFrame.setMinimumSize( new Dimension(800, 600) );
-		init();         // Initializing.
+		mainPanel.setSize( DEFAULT_SIZE_X, DEFAULT_SIZE_Y );
+		mainFrame.add(mainPanel);
+		init();
 		mainFrame.setVisible(true);
 		
 	}
 // ============================================ Init ===============================================				
 	static void init() {
-		GridBagConstraints gridBagCstr = new GridBagConstraints();
-		gridBagCstr.fill = GridBagConstraints.HORIZONTAL;
-		gridBagCstr.gridx = 0;
-		gridBagCstr.gridy = 0;
-		gridBagCstr.gridwidth = 2;
-		gridBagCstr.gridheight = 1;
-		gridBagCstr.weightx = 1.0d;
-		gridBagCstr.anchor = GridBagConstraints.CENTER;
-		mainPanel.setSize( DEFAULT_SIZE_X, DEFAULT_SIZE_Y );
-		mainPanel.add( jmb, gridBagCstr );
-		
+		GridBagConstraints gridBagCstr;
+
+		// < Tree init >
 		gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 0;
@@ -99,13 +88,12 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridheight = 1;
 		gridBagCstr.weightx = 0.4d;
 		gridBagCstr.weighty = 0.6d;
-
-		DEFAULT_TREE.getViewport().setBackground(Color.WHITE);
-		JLabel treeLabel = new JLabel("Hello there? I am in the tree part");
-		treeLabel.setHorizontalAlignment(JLabel.CENTER);
-		DEFAULT_TREE.getViewport().add(treeLabel);
+		DEFAULT_TREE.getViewport().setBackground( Color.WHITE );
+		DEFAULT_TREE.getViewport().add( initLabel() );
 		mainPanel.add( DEFAULT_TREE, gridBagCstr );
+		// < /Tree init >
 		
+		// < Info init >
 		gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 0;
@@ -114,14 +102,12 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridheight = 1;
 		gridBagCstr.weightx = 0.4d;
 		gridBagCstr.weighty = 0.3d;
-
-		gridBagCstr.anchor = GridBagConstraints.CENTER;
-		DEFAULT_INFO.getViewport().setBackground(Color.WHITE);
-		JLabel infoLable = new JLabel("Hello there? I am in the info part");
-		infoLable.setHorizontalAlignment(JLabel.CENTER);
-		DEFAULT_INFO.getViewport().add(infoLable);
+		DEFAULT_INFO.getViewport().setBackground( Color.WHITE );
+		DEFAULT_INFO.getViewport().add( initLabel() );
 		mainPanel.add( DEFAULT_INFO, gridBagCstr);
+		// < /Info init >
 		
+		// < Right init >
 		gridBagCstr = new GridBagConstraints();
 		gridBagCstr.fill = GridBagConstraints.BOTH;
 		gridBagCstr.gridx = 1;
@@ -130,19 +116,14 @@ public class GUISystem implements Runnable {
 		gridBagCstr.gridheight = 2;
 		gridBagCstr.weightx = 0.6d;
 		gridBagCstr.weighty = 0.9d;
-		gridBagCstr.anchor = GridBagConstraints.CENTER;
-		JLabel rightLable = new JLabel("Hello there? I am in the right part");
-		rightLable.setHorizontalAlignment(JLabel.CENTER);
-		DEFAULT_RIGHT.getViewport().add(rightLable);
-		DEFAULT_RIGHT.getViewport().setBackground(Color.WHITE);
-		mainPanel.add( DEFAULT_RIGHT, gridBagCstr);
+		mainPanel.add( initLabel(), gridBagCstr);
+		// < Right init >
+		
+		mainPanel.setBackground(Color.WHITE);
 		mainPanel.revalidate();
 		mainPanel.repaint();
-		mainFrame.revalidate();
-		mainFrame.repaint();
 	}
-// ============================================ Init ===============================================
-	
+
 // ============================================ Menu ===============================================		
 	static {
 		JMenu jmFile = new JMenu("File");
@@ -193,7 +174,7 @@ public class GUISystem implements Runnable {
 		    		if(pSource != null )
 		    			pSource.clearClassList();
 		    		pSource = FileSystem.read( jFileChooser.getSelectedFile() );
-		    		classTree();
+		    		createClassTree();
 		    	} else if( retVal == JFileChooser.CANCEL_OPTION );
 			}
 		});
@@ -234,10 +215,9 @@ public class GUISystem implements Runnable {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				mainPanel.removeAll();
-				mainPanel.revalidate();
-				mainPanel.repaint();
-				init();
+				treePartController(null);
+				infoPartController(null);
+				rightPartControllor(null);
 				pSource.clearClassList();
 				pSource = null;
 			}
@@ -251,11 +231,19 @@ public class GUISystem implements Runnable {
 		});
 		jmb.setMinimumSize( new Dimension(300, 21));
 		jmb.add(jmFile);
+		
+		GridBagConstraints gridBagCstr = new GridBagConstraints();
+		gridBagCstr.fill = GridBagConstraints.HORIZONTAL;
+		gridBagCstr.gridx = 0;
+		gridBagCstr.gridy = 0;
+		gridBagCstr.gridwidth = 2;
+		gridBagCstr.gridheight = 1;
+		gridBagCstr.weightx = 1.0d;
+		mainPanel.add( jmb, gridBagCstr );
 	}
-// ============================================ Menu ===============================================
-	
+
 // ============================================ Tree ===============================================	
-	private static void classTree() {
+	private static void createClassTree() {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
 		for( Classes classes : pSource.getClassList() ) {
 			DefaultMutableTreeNode classNode = new DefaultMutableTreeNode(classes) {
@@ -294,7 +282,6 @@ public class GUISystem implements Runnable {
 						StringBuilder strBuilder = new StringBuilder();
 						strBuilder.append( members.getName() + ": " + 
 							members.getReturnType().getTypeName() );
-						// #2
 						if( members.isArray() ) 
 							strBuilder.append(Delim.ARRAY_OPEN + Delim.ARRAY_CLOSE);
 						return strBuilder.toString();
@@ -307,65 +294,32 @@ public class GUISystem implements Runnable {
 		}
 		JTree classTree = new JTree(root);
 		classTree.addTreeSelectionListener( new TreeSelectionListener() {
-			
+
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				DefaultMutableTreeNode nodeObj = 
 						(DefaultMutableTreeNode) e.getPath().getLastPathComponent();
 				if( nodeObj.getUserObject() instanceof Classes ) {
+					infoPartController(null);
+					
 					// TODO: table stub.
 					System.out.println( ((PClass) nodeObj.getUserObject()).getContents() );
+					
 				} else if ( nodeObj.getUserObject() instanceof Methods ) {
-					drawList( ((Methods) nodeObj.getUserObject()).getMemberList() );
-				} else if ( nodeObj.getUserObject() instanceof Members ) {
-// ===================================== table ref, JUHAYONG =======================================
 					
-					Members members = (Members) nodeObj.getUserObject();
-					StringBuilder strBuilder = new StringBuilder();
-					
-					// #1
-					ListIterator<Methods> listIterator = 
-							members.getRefMethodList().listIterator();
-					
-					while( listIterator.hasNext() ) {
-						Methods methods = listIterator.next();
-						strBuilder.append( methods.getName() + Delim.PARAMETER_OPEN );
-						Map<String, Type> map = methods.getParams();
-						int i = 0;
-						for( String str : map.keySet() ){
-							strBuilder.append(map.get(str).getTypeName());
-							if( ++i == map.size() ) break;
-							strBuilder.append(", ");								
-						}
-						strBuilder.append(Delim.PARAMETER_CLOSE);
-						if( !listIterator.hasNext() ) break;
-						strBuilder.append(", ");
-					}
-					
-					String[] columnNames = { "Name", "methods" };
-					String[][] data = { { members.getName(), strBuilder.toString() } };
-					
-					DefaultTableModel dm = new DefaultTableModel(data, columnNames);
-					JTable memberRefTable = new JTable(dm);
-					Font font = memberRefTable.getFont();
-					memberRefTable.getColumnModel().getColumn(0).setMaxWidth(200);
-					memberRefTable.getColumnModel().getColumn(0).setPreferredWidth(120);
-					memberRefTable.getColumnModel().getColumn(1).setWidth(120);
-					memberRefTable.getColumnModel().getColumn(1).setPreferredWidth(120);
-					memberRefTable.setFont( new Font(font.getFontName(), font.getStyle(), 15) );
-					
-					DEFAULT_RIGHT.getViewport().remove(0);
-					DEFAULT_RIGHT.getViewport().revalidate();
-					DEFAULT_RIGHT.getViewport().add(memberRefTable);
+					infoPartController( 
+							createUsedMemberList( ( (Methods) nodeObj.getUserObject() ) ) );
 
-					mainPanel.revalidate();
-// ===================================== table ref, JUHAYONG =======================================
+				} else if ( nodeObj.getUserObject() instanceof Members ) {
+					
+					infoPartController(null);
+					
+					rightPartControllor( 
+							createMemberRefTable( (Members) nodeObj.getUserObject() ) );
+					
 				}
 			}
 		});
-
-
-		
 		Font font = classTree.getFont();
 		classTree.setFont(new Font(font.getName(), Font.PLAIN, 18) );
 		classTree.setVisibleRowCount(5);
@@ -375,6 +329,7 @@ public class GUISystem implements Runnable {
 		for( int i = 0 ; i < classTree.getRowCount(); ) {
 			classTree.expandRow(i++);
 		}
+		
 		DEFAULT_TREE.getViewport().remove(0);
 		DEFAULT_TREE.getViewport().revalidate();		
 		DEFAULT_TREE.getViewport().add(classTree);
@@ -385,8 +340,8 @@ public class GUISystem implements Runnable {
 // ============================================ Tree ===============================================
 	
 // ============================================ List ===============================================	
-	
-	private static void drawList( List<Members> memberList ) {
+	private static JList<String> createUsedMemberList( Methods methods ) {
+		List<Members> memberList = methods.getMemberList();
 		DefaultListModel<String> dlm = new DefaultListModel<>();
 		if( !memberList.isEmpty() )
 			dlm.addElement("Use: ");
@@ -396,18 +351,101 @@ public class GUISystem implements Runnable {
 		for( Members members : memberList ) {
 			dlm.addElement(members.getName());
 		}
-
-		DEFAULT_INFO.getViewport().remove(0);
-		DEFAULT_INFO.getViewport().revalidate();
-		
 		JList<String> jList = new JList<>(dlm);
 		Font font = jList.getFont();
 		jList.setFont(new Font(font.getName(), font.getStyle(), 15) );
 		jList.setMinimumSize(
 				new Dimension( (int) (DEFAULT_SIZE_X * 0.4),(int) (DEFAULT_SIZE_Y * 0.3) ) );
-		DEFAULT_INFO.getViewport().add(jList);
-    	mainPanel.revalidate();
-    	mainPanel.repaint();
+		return jList;
 	}
-// ============================================ List ===============================================	
+	
+// ============================================ List ===============================================
+	private static JScrollPane createMemberRefTable( Members members ) {
+		StringBuilder strBuilder = new StringBuilder();
+		ListIterator<Methods> listIterator = 
+				members.getRefMethodList().listIterator();
+		
+		while( listIterator.hasNext() ) {
+			Methods methods = listIterator.next();
+			strBuilder.append( methods.getName() + Delim.PARAMETER_OPEN );
+			Map<String, Type> map = methods.getParams();
+			int i = 0;
+			for( String str : map.keySet() ){
+				strBuilder.append(map.get(str).getTypeName());
+				if( ++i == map.size() ) break;
+				strBuilder.append(", ");								
+			}
+			strBuilder.append(Delim.PARAMETER_CLOSE);
+			if( !listIterator.hasNext() ) break;
+			strBuilder.append(", ");
+		}
+		
+		String[] columnNames = { "Name", "methods" };
+		String[][] data = { { members.getName(), strBuilder.toString() } };
+		
+		DefaultTableModel dm = new DefaultTableModel(data, columnNames);
+		
+		JTable memberRefTable = new JTable(dm);
+		Font font = memberRefTable.getFont();
+		memberRefTable.getColumnModel().getColumn(0).setMaxWidth(200);
+		memberRefTable.getColumnModel().getColumn(0).setPreferredWidth(120);
+		memberRefTable.getColumnModel().getColumn(1).setWidth(120);
+		memberRefTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+		memberRefTable.setFont( new Font(font.getFontName(), font.getStyle(), 15) );
+		JScrollPane jsp = new JScrollPane(memberRefTable);
+		jsp.getViewport().setBackground(Color.WHITE);
+		return jsp;
+	}
+	
+	private static void rightPartControllor( Component comp ) {
+		mainPanel.remove(3);
+		
+		GridBagConstraints gridBagCstr = new GridBagConstraints();
+		gridBagCstr.gridx = 1;
+		gridBagCstr.gridy = 1;
+		gridBagCstr.gridwidth = 1;
+		gridBagCstr.gridheight = 2;
+		gridBagCstr.weightx = 0.6d;
+		gridBagCstr.weighty = 0.9d;
+		gridBagCstr.fill = GridBagConstraints.BOTH;
+		if( comp == null ) {
+			mainPanel.add( initLabel(), gridBagCstr );
+		} else {
+			mainPanel.add( comp, gridBagCstr );
+		}
+		mainPanel.revalidate();
+		mainPanel.repaint();
+	}
+	
+	private static void infoPartController( Component comp ) {
+		DEFAULT_INFO.getViewport().remove(0);
+		DEFAULT_INFO.getViewport().revalidate();
+		
+		if( comp == null ) {
+			DEFAULT_INFO.getViewport().add(initLabel());
+		} else {
+			DEFAULT_INFO.getViewport().add(comp);
+		}
+		mainPanel.revalidate();
+		mainPanel.repaint(); 			
+	}
+	
+	private static void treePartController( Component comp ) {
+		DEFAULT_TREE.getViewport().remove(0);
+		DEFAULT_TREE.getViewport().revalidate();
+		
+		if( comp == null ) {
+			DEFAULT_TREE.getViewport().add(initLabel());
+		} else {
+			DEFAULT_TREE.getViewport().add(comp);
+		}
+		mainPanel.revalidate();
+		mainPanel.repaint();
+	}
+	
+	private static JLabel initLabel() {
+		JLabel initLabel = new JLabel( "No data available" );
+		initLabel.setHorizontalAlignment(JLabel.CENTER);
+		return initLabel;
+	}
 }
