@@ -28,9 +28,16 @@ public class LibraryTest {
 	
     @Test public void testSomeLibraryMethod() {
     	
-    	String test = "{aasdf  f\n\n}";
-    	String s = toCleanClauses(test);
-    	System.out.println( s );
+    	String test = "void Queue::EnQueue( int data ) {\n  if( Queue::isFull() )}asdfb {}{\n	arr[last] = data;\n	last = ( last + 1 ) % size;\n  } asb}"; 
+    	Scanner scn = new Scanner(test);
+    	scn.useDelimiter("(?<!\\{)\\}");
+    	while(scn.hasNext())
+    		System.out.println(scn.next() + "!!!");
+    	
+    	Scanner scn2 = new Scanner(test);
+    	scn2.useDelimiter("}");
+    	while(scn2.hasNext())
+    		System.out.println(scn2.next() + "@@@");
     }
     
     public String trim( char[] value ) {

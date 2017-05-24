@@ -13,7 +13,7 @@ public final class PMember implements Members {
 	private Type returnType;
 	private MemberType memberType;
 	private Methods memberOfMember;
-	//PMember¿¡´Â MapÀÌ ¾ø¾îµµ µÇÁÒ?
+	//PMemberï¿½ï¿½ï¿½ï¿½ Mapï¿½ï¿½ ï¿½ï¿½ï¿½îµµ ï¿½ï¿½ï¿½ï¿½?
 	
 	private PMember() {} 
 	
@@ -63,6 +63,14 @@ public final class PMember implements Members {
 		
 	}
 
+	public boolean isArray() {
+		if( memberType == MemberType.ARRAY )
+			return true;
+		else return false;
+	}
+	
+	// XXX: consider this.
+	/*
 	public boolean isArray(String memberName) {
 		if(memberName=="arr")
 			return false;
@@ -74,7 +82,13 @@ public final class PMember implements Members {
 			return true;
 		return false;
 	}
+	*/
 	
+	public void setMemberType( MemberType memberType ) {
+		this.memberType = memberType;
+	}
+	
+	/* XXX: consider this.
 	@Override
 	public void setMemberType(String memberName) {
 		if(isArray(memberName)==true)
@@ -82,13 +96,12 @@ public final class PMember implements Members {
 		else if(isArray(memberName)==false)
 			this.memberType=MemberType.ARRAY;
 	}
-
+	 */
+	
 	@Override
 	public MemberType getMemberType() {
 		return memberType;
 	}
-
-	
 
 	@Override
 	public void setName(String name) {
@@ -99,16 +112,32 @@ public final class PMember implements Members {
 	public String getName() {
 		return memberName;
 	}
-
+	
+	/*
+	 * XXX: why parameter is methods and name is Member see this.
+	 */
 	@Override
 	public void setMember(Methods methods) {
 		this.memberOfMember=methods;
-		
 	}
-
+	
+	/*
+	 * XXX: same as above.
+	 */
 	@Override
 	public Methods getMember() {
 		return memberOfMember;
 	}
 
+	@Override
+	public boolean isArray( Members members ) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setMemberType(String memberType) {
+		// TODO Auto-generated method stub
+
+	}
 }

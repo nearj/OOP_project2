@@ -45,10 +45,11 @@ void Queue::EnQueue( int data ) {
 
 int Queue::DeQueue() {
   if( Queue::isEmpty() ) {
-	return arr[first++];;;
+	return arr[first++];
 	first = ( first + 1 ) % size;
   }
 }
+
 class Queue {
 
 public:

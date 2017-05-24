@@ -1,12 +1,9 @@
 package uos;
 
-import java.util.List;
-import java.util.ArrayList;
-
 /**
  * Set of Delimiter to use.
  * 
- * @author imp
+ * @author 2016920054_JUHAYONG
  */
 public class Delim {
 	
@@ -44,34 +41,4 @@ public class Delim {
 	public final static String LINE_FEED = System.lineSeparator();
 	public final static String TAB = "\t";
 	
-	
-	private static List<String> classList = new ArrayList<>();
-
-	/**
-	 * Setting class name as delimiter
-	 * 
-	 * @param name of class
-	 */
-	public static void setClassName( String className ) {
-		classList.add(className);
-	}
-	
-	/**
-	 * Get list of class to use delimiter
-	 * 
-	 * @return List of class name
-	 */
-	public static List<String> getClassList() { 
-		return classList;
-	}
-	
-	/**
-	 * Get class name to use delimiter
-	 * 
-	 * @param index of class name list
-	 * @return class name in the list according index
-	 */
-	public static String getClassName( int index ) {
-		return classList.get(index);
-	}
 }

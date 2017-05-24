@@ -22,17 +22,22 @@ import uos.Type;
  * @author imp
  *
  */
-public final class PMethod implements Methods, Parse {
+public final class PMethod implements Methods, Parse, Field {
 	
 	// -------------------------------- Member ----------------------------------
 	private Classes refClass;
-	private String methodName;
+	
 	private String contents;
+	private List<Members> memberList = new ArrayList<>();
+	
+	private String field;
+	private String methodName;
 	private uos.AccessModifier am;
 	private MethodType methodType;
 	private Type returnType;
 	private Map<String, Type> params = new HashMap<>();
-	private List<Members> memberList = new ArrayList<>();
+	
+	
 	
 	private PMethod() {} // To prevent instantiation
 	
@@ -63,6 +68,16 @@ public final class PMethod implements Methods, Parse {
 
 	// < /Reference >
 	// < Information >
+
+	@Override
+	public void setPropField(String field) {
+		this.field = field;
+	}
+
+	@Override
+	public String getField() {
+		return field;
+	}
 	
 	@Override
 	public void setName( String methodName ) {
@@ -173,52 +188,22 @@ public final class PMethod implements Methods, Parse {
 	public void setContents(String contents) {
 		
 		this.contents = contents;
-		// TEST
-		String[] tests = { "array", "last", "size", "first" };
-		
-		for( String str : tests ) {
-			if( contents.contains(str)) {
-				PMember pMember = PMember.newInstance();
-				pMember.setMemberName(str);
-				memberList.add(pMember);
-			}
-		}
-		
-		// TODO: repalce to old
-		/* OLD
 		for( Members members : refClass.getMemberList() ) {
 			if( contents.contains( members.getName() ) &&
-<<<<<<< Upstream, based on master
-				!memberList.contains(members) ) {
+					!memberList.contains(members) ) {
 				memberList.add(members);
 				members.setRefMethod(this);
 				members.setRefClass(this.getRefClass());
-=======
-					!memberList.contains(members) ){
-				memberList.add(members);
-				// members.setRefMethods(this);
-				// members.setRefClass(this.getRefClass());
->>>>>>> c7bdd2c (바꿈 ㅋㅋ)
-			}
-					!memberList.contains(members) ){
-				memberList.add(members);
-				// members.setRefMethods((Methods) this);
-				members.setRefClass(this.getRefClass());
-			}
-					!memberList.contains(members) ){
-				memberList.add(members);
-				// members.setRefMethods((Methods) this);
-				members.setRefClass(this.getRefClass());
 			}
 		}
-<<<<<<< Upstream, based on master
-		*/
 	}
 
 	@Override
 	public String getContents() {
 		return contents;
 	}
+
+
 
 
 	// < /Contents >

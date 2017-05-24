@@ -113,14 +113,14 @@ public final class PSource implements Parse {
 			// If scanned lines do not have content, break.
 			
 			String className = totalContent.substring( 
-					0, totalContent.indexOf(Delim.INITIAL_OPEN) - 1 ).trim();
+					0, totalContent.indexOf(Delim.INITIAL_OPEN) - 1 );
 			// class name will be first first index of token, and before first index of
 			// Initialization.
 			
 			PClass pClass = PClass.newInstance();
-			pClass.setName(className);
+			pClass.setPropField( "class " + className );
+			pClass.setName( className.trim() );
 			classList.add(pClass);
-			Delim.setClassName(className);
 			// Set name of class and use the name as Delimiter.
 			
 			String initContent = 
@@ -135,7 +135,7 @@ public final class PSource implements Parse {
 					totalContent.substring( totalContent.indexOf(Delim.INITIAL_CLOSE) + 2 ).
 					trim();
 			methodParser(methodContents);
-			// Parsing method.
+			// Parsing method, since initialization close is };
 		}
 		scn.close();
 	}
@@ -144,72 +144,17 @@ public final class PSource implements Parse {
 	public String getContents() {
 		StringBuilder strBuilder = new StringBuilder();
 		
-		// < File name >
-		strBuilder.append("File Name: " + fileName + 
-				Delim.LINE_FEED + Delim.LINE_FEED);
-		// < /File name >
-		
-		// < Class-list >
-		strBuilder.append( "Classes: " + Delim.LINE_FEED );
-		for( Classes classes : classList ) {
-			strBuilder.append( Delim.TAB + classes.getName() );
-		}
-		strBuilder.append( Delim.LINE_FEED + Delim.LINE_FEED );
-		// < /Class-list >
-		
 		// < Class specification >
 		for( Classes classes : classList ) {
-			strBuilder.append( Delim.TAG_OPEN + "class " + classes.getName() + 
-					Delim.TAG_CLOSE + Delim.LINE_FEED );
-			
-			// < Method-list >
-			strBuilder.append("methods:" + Delim.LINE_FEED );
+			PClass pClass = (PClass) classes;
+			strBuilder.append( pClass.getField() + Delim.INITIAL_OPEN + Delim.LINE_FEED +
+					pClass.getContents() + Delim.INITIAL_CLOSE + Delim.LINE_FEED );
 			for( Methods methods : classes.getMethodList() ) {
-				strBuilder.append( Delim.TAB + methods.getReturnType().name() + Delim.SPACE +
-						methods.getName() + Delim.PARAMETER_OPEN );
-				Iterator<String> iterator = methods.getParams().keySet().iterator();
-				while( iterator.hasNext() ) {
-					String paramName = iterator.next();
-					
-					strBuilder.append( Delim.TAB + 
-							methods.getParamType( paramName ).getTypeName() +
-							Delim.SPACE + paramName ) ;
-					
-					if( !iterator.hasNext() ) break;
-					strBuilder.append( "," );
-				}
-				strBuilder.append( Delim.PARAMETER_CLOSE + Delim.LINE_FEED );
-			}
-			strBuilder.append( Delim.LINE_FEED );
-			// < Method-list >
-			
-			// < Member-list >
-			for( Members members : classes.getMemberList() ) {
-				strBuilder.append( members.getType().getTypeName() + 
-						Delim.SPACE + members.getName() );
-				if( members.isArray() )
-					strBuilder.append(Delim.ARRAY_OPEN + Delim.ARRAY_CLOSE);
-				strBuilder.append( Delim.LINE_FEED );
-			}
-			// < /Member-list >
-			
-			// < Method specification >
-			for( Methods methods : classes.getMethodList() ) {
-				strBuilder.append( Delim.TAB + Delim.TAG_OPEN + 
-						"method " + methods.getName() + Delim.TAG_CLOSE +
-						Delim.LINE_FEED ); 
-				strBuilder.append( Delim.TAB + "field:" + Delim.LINE_FEED );
-				for( Members members : methods.getMemberList() ) {
-					strBuilder.append( Delim.TAB + Delim.TAB + members.getName() +
-							Delim.LINE_FEED );
-				}
-				strBuilder.append( Delim.TAB + Delim.TAG_OPEN +
-						"/method " + methods.getName() + Delim.TAG_CLOSE +
+				PMethod pMethod = (PMethod) methods;
+				strBuilder.append( pMethod.getField() + Delim.CLAUSE_OPEN +
+						Delim.LINE_FEED + pMethod.getContents() + Delim.ARRAY_CLOSE +
 						Delim.LINE_FEED );
 			}
-			// < /Method specification >
-			strBuilder.append( Delim.TAG_OPEN + "/class " + Delim.TAG_CLOSE +
-					Delim.LINE_FEED );
 		}
 		// < Class specification >
 		return strBuilder.toString();
@@ -233,7 +178,9 @@ public final class PSource implements Parse {
 
 			// < Main-init: set scanner  >
 			String contents = 
-					initScn.next().replace( Delim.LINE_FEED, Delim.BLANK );
+					initScn.next().replace( Delim.LINE_FEED, Delim.BLANK ).
+					replace( Delim.LINE_END, Delim.LINE_END + Delim.SPACE );
+			// To make non empty line and interpreter like contents. 
 			Scanner lineScn = new Scanner( contents );
 			lineScn.useDelimiter(Delim.LINE_END);
 			// < /Initialization >
@@ -241,9 +188,9 @@ public final class PSource implements Parse {
 			// < Scan each line >
 			while( lineScn.hasNext() ) {
 
-				String lineContents = lineScn.next().trim();
+				String lineContents = lineScn.next();
 				if( !lineScn.hasNext() ) {
-					if( !lineContents.equals(Delim.BLANK) )
+					if( !lineContents.trim().equals(Delim.BLANK) )
 						acModifier = AccessModifier.set(lineContents);
 					break;
 				}
@@ -261,14 +208,30 @@ public final class PSource implements Parse {
 				if( isMember ) {    // If line content is member.
 					PMember pMember = PMember.newInstance();
 					pMember.setRefClass(classes);
+					lineContents = lineContents.trim();
 					
+					Type retrunType = Type.set(
+							lineContents.substring( 0, lineContents.indexOf(Delim.SPACE) ).trim());
+					String methodName;
+					if( lineContents.contains(Delim.ARRAY_OPEN) ) {
+						methodName = lineContents.substring( lineContents.indexOf(Delim.SPACE), 
+								lineContents.indexOf(Delim.ARRAY_OPEN) ).trim();
+						pMember.setMemberType(Members.MemberType.ARRAY);
+					}
+					else {
+						methodName = lineContents.substring( lineContents.indexOf(Delim.SPACE) ).trim();
+						pMember.setMemberType(Members.MemberType.DEFAULT);
+					}
+					pMember.setReturnType(retrunType);
+					pMember.setName(methodName);
+					classes.setMember(pMember);
 					
 				} else {            // If line content is method.
 					PMethod pMethod = PMethod.newInstance();
 					pMethod.setRefClass(classes);
 					
 					String methodInfo = lineContents.substring(
-							0, lineContents.indexOf(Delim.PARAMETER_OPEN) );
+							0, lineContents.indexOf(Delim.PARAMETER_OPEN) ).trim();
 					
 					if( methodInfo.equals( classes.getName() ) ) {
 						pMethod.setMethodType(MethodType.Constructor);
@@ -345,6 +308,7 @@ public final class PSource implements Parse {
 	private void methodParseHelper( String contents ) {
 		
 		Classes classes = classList.get( classList.size() - 1 );
+		// get current class.
 		PMethod pMethod = null;
 		String infoContent = contents.substring(
 				0, contents.indexOf( Delim.CLAUSE_OPEN ) ).trim();
@@ -363,6 +327,7 @@ public final class PSource implements Parse {
 		// Repalce (...) to ()
 
 		pMethod = (PMethod) classes.getMethod(methodName);
+		pMethod.setPropField( contents.substring(0, contents.indexOf( Delim.CLAUSE_OPEN ) - 1 ) );
 
 		if( paramContent.contains( Delim.COMMA ) ) {
 			Scanner paramScn = new Scanner(paramContent);

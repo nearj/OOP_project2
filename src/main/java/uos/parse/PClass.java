@@ -16,11 +16,12 @@ import java.util.ArrayList;
  * @author imp
  *
  */
-public final class PClass implements Classes, Parse {
+public final class PClass implements Classes, Parse, Field {
 
 	// -------------------------------- Member ----------------------------------
 	private String className;
 	private String contents;
+	private String field;
 	
 	private List<Methods> methodList = new ArrayList<>();
 	private List<Members> memberList = new ArrayList<>();
@@ -37,7 +38,18 @@ public final class PClass implements Classes, Parse {
 	public static PClass newInstance() {
 		return new PClass();
 	}
-		
+
+	// < Field >
+	@Override
+	public void setPropField(String field) {
+		this.field = field;
+	}
+
+	@Override
+	public String getField() {
+		return field;
+	}
+	// < /Field>
 	// < Name >
 	
 	@Override

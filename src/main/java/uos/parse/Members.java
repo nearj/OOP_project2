@@ -47,10 +47,11 @@ public interface Members{
 	// < /Reference class >
 
 	public Type getReturnType();
-	public void setReturnType(Type type);
-	public boolean isArray(String memberName);
+	public void setReturnType( Type type );
+	public boolean isArray( Members members );
+	public boolean isArray();
 	public MemberType getMemberType();
-	public void setMemberType(String memberType);
+	public void setMemberType( String memberType );
 	public void setName(String name);
 	public String getName();
 	
