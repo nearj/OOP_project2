@@ -353,7 +353,6 @@ public class GUISystem implements Runnable {
 					memberRefTable.getColumnModel().getColumn(1).setWidth(120);
 					memberRefTable.getColumnModel().getColumn(1).setPreferredWidth(120);
 					memberRefTable.setFont( new Font(font.getFontName(), font.getStyle(), 15) );
-					DEFAULT_INFO.getViewport().remove(0);
 					
 					DEFAULT_RIGHT.getViewport().remove(0);
 					DEFAULT_RIGHT.getViewport().revalidate();
