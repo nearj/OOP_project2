@@ -5,26 +5,32 @@ import java.util.List;
 
 import uos.Type;
 
+/**
+ * 
+ * @author 2016920054_김종훈
+ *
+ */
 public final class PMember implements Members {
-	
+
 	private Classes refClass;
 	private List<Methods> refMethodList = new ArrayList<>();
 	private String memberName;
 	private Type returnType;
 	private MemberType memberType;
 	private Methods memberOfMember;
-	//PMember���� Map�� ��� ����?
-	
-	private PMember() {} 
-	
+	// PMember���� Map�� ��� ����?
+
+	private PMember() {
+	}
+
 	public static PMember newInstance() {
 		return new PMember();
 	}
 
 	@Override
-	public void setRefClass(Classes classes) {
+	public void setRefClass( Classes classes ) {
 		this.refClass = classes;
-		
+
 	}
 
 	@Override
@@ -33,16 +39,17 @@ public final class PMember implements Members {
 	}
 
 	@Override
-	public void setRefMethod(Methods methods) {
-		refMethodList.add(methods);
+	public void setRefMethod( Methods methods ) {
+		refMethodList.add( methods );
 	}
 
 	@Override
 	public Methods getRefMethod( String methodName ) {
 		for( Methods methods : refMethodList ) {
-			if(methods.getName().equals(methodName)) {
+			if ( methods.getName().equals( methodName ) ) {
 				return methods;
-			} else return null;			
+			} else
+				return null;
 		}
 		return null;
 	}
@@ -58,69 +65,61 @@ public final class PMember implements Members {
 	}
 
 	@Override
-	public void setReturnType(Type type) {
-		this.returnType=type;
-		
+	public void setReturnType( Type type ) {
+		this.returnType = type;
+
 	}
 
 	public boolean isArray() {
-		if( memberType == MemberType.ARRAY )
+		if ( memberType == MemberType.ARRAY )
 			return true;
-		else return false;
+		else
+			return false;
 	}
-	
+
 	// XXX: consider this.
 	/*
-	public boolean isArray(String memberName) {
-		if(memberName=="arr")
-			return false;
-		else if(memberName=="size")
-			return true;
-		else if(memberName=="first")
-			return true;
-		else if(memberName=="last")
-			return true;
-		return false;
-	}
-	*/
-	
+	 * public boolean isArray(String memberName) { if(memberName=="arr") return
+	 * false; else if(memberName=="size") return true; else
+	 * if(memberName=="first") return true; else if(memberName=="last") return
+	 * true; return false; }
+	 */
+
 	public void setMemberType( MemberType memberType ) {
 		this.memberType = memberType;
 	}
-	
-	/* XXX: consider this.
-	@Override
-	public void setMemberType(String memberName) {
-		if(isArray(memberName)==true)
-			this.memberType=MemberType.DEFAULT;
-		else if(isArray(memberName)==false)
-			this.memberType=MemberType.ARRAY;
-	}
+
+	/*
+	 * XXX: consider this.
+	 * 
+	 * @Override public void setMemberType(String memberName) {
+	 * if(isArray(memberName)==true) this.memberType=MemberType.DEFAULT; else
+	 * if(isArray(memberName)==false) this.memberType=MemberType.ARRAY; }
 	 */
-	
+
 	@Override
 	public MemberType getMemberType() {
 		return memberType;
 	}
 
 	@Override
-	public void setName(String name) {
-		this.memberName=name;		
+	public void setName( String name ) {
+		this.memberName = name;
 	}
 
 	@Override
 	public String getName() {
 		return memberName;
 	}
-	
+
 	/*
 	 * XXX: why parameter is methods and name is Member see this.
 	 */
 	@Override
-	public void setMember(Methods methods) {
-		this.memberOfMember=methods;
+	public void setMember( Methods methods ) {
+		this.memberOfMember = methods;
 	}
-	
+
 	/*
 	 * XXX: same as above.
 	 */
@@ -136,7 +135,7 @@ public final class PMember implements Members {
 	}
 
 	@Override
-	public void setMemberType(String memberType) {
+	public void setMemberType( String memberType ) {
 		// TODO Auto-generated method stub
 
 	}

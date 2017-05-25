@@ -3,26 +3,27 @@ package uos;
 /**
  * Accssor modifier
  * 
- * @author imp
+ * @author 2016920054_JUHAYONG
  */
 public enum AccessModifier {
-	PUBLIC("public"), PRIVATE("private"), PROTECTED("protected");
-	
+	PUBLIC( "public" ), PRIVATE( "private" ), PROTECTED( "protected" );
+
 	private String am;
-	
+
 	private AccessModifier( String am ) {
 		this.am = am;
 	}
-	
+
 	public String toString() {
 		return am;
 	}
-	
+
 	public static AccessModifier set( String am ) {
-		if( am.equals(PUBLIC.am) )
+		if ( am.equals( PUBLIC.am ) )
 			return AccessModifier.PUBLIC;
-		else if( am.equals(PRIVATE.am) )
+		else if ( am.equals( PRIVATE.am ) )
 			return AccessModifier.PRIVATE;
-		else return null;
+		else
+			return null;
 	}
 }

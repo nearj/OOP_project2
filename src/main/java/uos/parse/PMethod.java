@@ -9,42 +9,46 @@ import uos.AccessModifier;
 import uos.Type;
 
 /**
- * This class stand for to save parsed methods, implements Methods and Parse Class.
- * </p> 
+ * This class stand for to save parsed methods, implements Methods and Parse
+ * Class.
+ * </p>
  * 
- * <p> To carry out, this class has members as name( String Class ), 
- * return( Type Class ), params( Map<Parameter name, Type> Class ),
- * member list( List<Members> Class ) and contents. </p>
+ * <p>
+ * To carry out, this class has members as name( String Class ), return( Type
+ * Class ), params( Map<Parameter name, Type> Class ), member list(
+ * List<Members> Class ) and contents.
+ * </p>
  * 
- * <p> When contents member is set, member list will be set automatically, with
- * the reverse is identically. </p>
+ * <p>
+ * When contents member is set, member list will be set automatically, with the
+ * reverse is identically.
+ * </p>
  * 
- * @author imp
+ * @author 2016920054_JUHAYONG
  *
  */
 public final class PMethod implements Methods, Parse, Field {
-	
+
 	// -------------------------------- Member ----------------------------------
 	private Classes refClass;
-	
+
 	private String contents;
 	private List<Members> memberList = new ArrayList<>();
-	
+
 	private String field;
 	private String methodName;
 	private uos.AccessModifier am;
 	private MethodType methodType;
 	private Type returnType;
 	private Map<String, Type> params = new HashMap<>();
-	
-	
-	
-	private PMethod() {} // To prevent instantiation
-	
+
+	private PMethod() {
+	} // To prevent instantiation
+
 	// -------------------------------- Member ----------------------------------
-	
+
 	// -------------------------------- Method ----------------------------------
-	
+
 	/**
 	 * Create new instance of PMethod with static factory method.
 	 * 
@@ -53,11 +57,11 @@ public final class PMethod implements Methods, Parse, Field {
 	public static PMethod newInstance() {
 		return new PMethod();
 	}
-	
+
 	// < Reference >
-	
+
 	@Override
-	public void setRefClass(Classes classes) {
+	public void setRefClass( Classes classes ) {
 		this.refClass = classes;
 	}
 
@@ -70,7 +74,7 @@ public final class PMethod implements Methods, Parse, Field {
 	// < Information >
 
 	@Override
-	public void setPropField(String field) {
+	public void setPropField( String field ) {
 		this.field = field;
 	}
 
@@ -78,18 +82,19 @@ public final class PMethod implements Methods, Parse, Field {
 	public String getField() {
 		return field;
 	}
-	
+
 	@Override
 	public void setName( String methodName ) {
 		this.methodName = methodName;
 	}
-	
+
 	@Override
 	public String getName() {
 		return methodName;
 	}
+
 	@Override
-	public void setAccessModifier(AccessModifier am) {
+	public void setAccessModifier( AccessModifier am ) {
 		this.am = am;
 	}
 
@@ -99,7 +104,7 @@ public final class PMethod implements Methods, Parse, Field {
 	}
 
 	@Override
-	public void setMethodType(MethodType methodType) {
+	public void setMethodType( MethodType methodType ) {
 		this.methodType = methodType;
 	}
 
@@ -107,10 +112,10 @@ public final class PMethod implements Methods, Parse, Field {
 	public MethodType getMethodType() {
 		return methodType;
 	}
-	
+
 	// < /Information >
 	// < Return >
-	
+
 	@Override
 	public void setReturnType( Type type ) {
 		this.returnType = type;
@@ -120,10 +125,10 @@ public final class PMethod implements Methods, Parse, Field {
 	public Type getReturnType() {
 		return returnType;
 	}
-	
+
 	// < /Return >
 	// < Parameter >
-	
+
 	@Override
 	public void setParam( Type type, String nameOfParam ) {
 		params.put( nameOfParam, type );
@@ -138,44 +143,44 @@ public final class PMethod implements Methods, Parse, Field {
 	public Type getParamType( String nameOfParam ) {
 		return params.get( nameOfParam );
 	}
-	
+
 	// < /Parameter >
 	// < Member >
-	
+
 	@Override
 	public void setMember( Members members ) {
-		memberList.add(members);
+		memberList.add( members );
 	}
 
 	@Override
 	public Members getMember( int index ) {
-		return memberList.get(index);
+		return memberList.get( index );
 	}
-	
+
 	@Override
 	public Members getMember( String memberName ) {
 		for( Members members : memberList ) {
-			if( members.getName()== memberName )
+			if ( members.getName() == memberName )
 				return members;
 		}
 		return null;
 	}
 
 	@Override
-	public List<Members> getMemberList( ) {
+	public List<Members> getMemberList() {
 		return memberList;
 	}
 
 	@Override
 	public void removeMember( int index ) {
-		memberList.remove(index);
+		memberList.remove( index );
 	}
 
 	@Override
 	public void removeMember( Members members ) {
-		memberList.remove(members);
+		memberList.remove( members );
 	}
-	
+
 	@Override
 	public void clearMemberList() {
 		memberList.clear();
@@ -183,17 +188,16 @@ public final class PMethod implements Methods, Parse, Field {
 
 	// < /Member >
 	// < Contents >
-	
+
 	@Override
-	public void setContents(String contents) {
-		
+	public void setContents( String contents ) {
+
 		this.contents = contents;
 		for( Members members : refClass.getMemberList() ) {
-			if( contents.contains( members.getName() ) &&
-					!memberList.contains(members) ) {
-				memberList.add(members);
-				members.setRefMethod(this);
-				members.setRefClass(this.getRefClass());
+			if ( contents.contains( members.getName() ) && !memberList.contains( members ) ) {
+				memberList.add( members );
+				members.setRefMethod( this );
+				members.setRefClass( this.getRefClass() );
 			}
 		}
 	}
@@ -203,9 +207,7 @@ public final class PMethod implements Methods, Parse, Field {
 		return contents;
 	}
 
-
-
-
 	// < /Contents >
-	// -------------------------------- Method ----------------------------------
+	// -------------------------------- Method
+	// ----------------------------------
 }
