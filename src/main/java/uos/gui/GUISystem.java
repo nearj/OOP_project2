@@ -42,6 +42,7 @@ import javax.swing.text.BadLocationException;
 import uos.Delim;
 import uos.Type;
 import uos.file.FileSystem;
+import uos.gui.GUISystem.MyFrame;
 import uos.parse.Classes;
 import uos.parse.Members;
 import uos.parse.Methods;
@@ -422,6 +423,8 @@ public class GUISystem implements Runnable {
 		String methodString= ( (PMethod) methods ).getContents();
 		JTextArea methodContentText = new JTextArea(methodString);
 		Font font = methodContentText.getFont();
+		MyFrame myFrame = (new GUISystem()).new MyFrame();
+		
 		methodContentText.setFont( new Font(font.getFontName(), font.getStyle(), 15) );
 		try {
 			System.out.println(
@@ -434,37 +437,45 @@ public class GUISystem implements Runnable {
 		jsp.getViewport().setBackground(Color.WHITE);
 		return jsp;
 		
-		class MyFrame extends JFrame {
+	}
+	// ========================================== ±Ë¡æ»∆ ===============================
+	class MyFrame extends JFrame {
 		private JButton jb1;
 		private JButton jb2;
-		MyListener listener = new MyListener();
-		
+		String methodString;
+		void setMethodString(String str) {
+			this.methodString = str;
+		}
+
 		public MyFrame() {
 			this.setSize(300, 200);
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			this.setTitle("Save File?");
 			JPanel panel = new JPanel();
 			jb1= new JButton("Apply");
-			jb1.addActionListener(listener);
+			jb1.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setMethodString(methodContentText.getText());
+					}
+				});
 			panel.add(jb1);
 			jb2= new JButton("Cancel");
-			jb2.addActionListener(listener);
+			jb2.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					}
+				});
 			panel.add(jb2);
 			this.add(panel);
 			this.setVisible(true);
 		}
-		
-		private class MyListener implements ActionListner {
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource()==jb1){
-					methodString=methodContentText.getText();
-				} else if (e.getSource()==jb2) {
-					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				}
-			}
-		}
-		}
+
 	}
+	// ================================ ±Ë¡æ»∆(kim jong hun ) =================================
 		
 	//Method Viewer
 	
