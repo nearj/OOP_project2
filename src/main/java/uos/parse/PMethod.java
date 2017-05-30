@@ -193,6 +193,7 @@ public final class PMethod implements Methods, Parse, Field {
 	public void setContents( String contents ) {
 
 		this.contents = contents;
+		memberList.clear();
 		for( Members members : refClass.getMemberList() ) {
 			if ( contents.contains( members.getName() ) && !memberList.contains( members ) ) {
 				memberList.add( members );

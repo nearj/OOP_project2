@@ -26,6 +26,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -36,6 +37,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
 
 import uos.Delim;
 import uos.Type;
@@ -44,7 +46,9 @@ import uos.parse.Classes;
 import uos.parse.Members;
 import uos.parse.Methods;
 import uos.parse.PClass;
+import uos.parse.PMethod;
 import uos.parse.PSource;
+import uos.parse.Parse;
 
 public class GUISystem implements Runnable {
 
@@ -225,7 +229,7 @@ public class GUISystem implements Runnable {
 			@Override
 			public void actionPerformed( ActionEvent arg0 ) {
 				treePartController( null );
-				infoPartController( null );
+				infoPartControllor( null );
 				rightPartControllor( null );
 				pSource.clearClassList();
 				pSource = null;
@@ -313,19 +317,21 @@ public class GUISystem implements Runnable {
 				DefaultMutableTreeNode nodeObj = (DefaultMutableTreeNode) e.getPath()
 						.getLastPathComponent();
 				if ( nodeObj.getUserObject() instanceof Classes ) {
-					infoPartController( null );
+					infoPartControllor( null );
 
 					// TODO: table stub.
 					System.out.println( ( (PClass) nodeObj.getUserObject() ).getContents() );
 
 				} else if ( nodeObj.getUserObject() instanceof Methods ) {
 
-					infoPartController(
+					infoPartControllor(
 							createUsedMemberList( ( (Methods) nodeObj.getUserObject() ) ) );
+					rightPartControllor(
+							createMethodContentText( ( (Methods) nodeObj.getUserObject() ) ) );
 
 				} else if ( nodeObj.getUserObject() instanceof Members ) {
 
-					infoPartController( null );
+					infoPartControllor( null );
 
 					rightPartControllor(
 							createMemberRefTable( (Members) nodeObj.getUserObject() ) );
@@ -411,6 +417,57 @@ public class GUISystem implements Runnable {
 	}
 
 	// ======================================= Control ========================================== //
+	//Method Viewer
+	private static JScrollPane createMethodContentText(Methods methods) {
+		String methodString= ( (PMethod) methods ).getContents();
+		JTextArea methodContentText = new JTextArea(methodString);
+		Font font = methodContentText.getFont();
+		methodContentText.setFont( new Font(font.getFontName(), font.getStyle(), 15) );
+		try {
+			System.out.println(
+					methodContentText.getDocument().getText(0, methodContentText.getDocument().getLength()));
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JScrollPane jsp = new JScrollPane(methodContentText);
+		jsp.getViewport().setBackground(Color.WHITE);
+		return jsp;
+		
+		class MyFrame extends JFrame {
+		private JButton jb1;
+		private JButton jb2;
+		MyListener listener = new MyListener();
+		
+		public MyFrame() {
+			this.setSize(300, 200);
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			this.setTitle("Save File?");
+			JPanel panel = new JPanel();
+			jb1= new JButton("Apply");
+			jb1.addActionListener(listener);
+			panel.add(jb1);
+			jb2= new JButton("Cancel");
+			jb2.addActionListener(listener);
+			panel.add(jb2);
+			this.add(panel);
+			this.setVisible(true);
+		}
+		
+		private class MyListener implements ActionListner {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource()==jb1){
+					methodString=methodContentText.getText();
+				} else if (e.getSource()==jb2) {
+					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				}
+			}
+		}
+		}
+	}
+		
+	//Method Viewer
+	
 	private static void rightPartControllor( Component comp ) {
 		mainPanel.remove( 3 );
 
@@ -431,7 +488,7 @@ public class GUISystem implements Runnable {
 		mainPanel.repaint();
 	}
 
-	private static void infoPartController( Component comp ) {
+	private static void infoPartControllor( Component comp ) {
 		DEFAULT_INFO.getViewport().remove( 0 );
 		DEFAULT_INFO.getViewport().revalidate();
 
