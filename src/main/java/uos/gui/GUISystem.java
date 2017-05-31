@@ -25,6 +25,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.AbstractButton;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -439,12 +440,13 @@ public class GUISystem implements Runnable {
 		
 	}
 	// ========================================== ±Ë¡æ»∆ ===============================
-	class MyFrame extends JFrame {
+	public class MyFrame extends JFrame {
 		private JButton jb1;
 		private JButton jb2;
 		String methodString;
 		void setMethodString(String str) {
 			this.methodString = str;
+			PMethod.contents = methodString;
 		}
 
 		public MyFrame() {
@@ -456,7 +458,7 @@ public class GUISystem implements Runnable {
 			jb1.addActionListener(new ActionListener() {
 				
 				@Override
-				public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
 					setMethodString(methodContentText.getText());
 					}
 				});
@@ -475,6 +477,7 @@ public class GUISystem implements Runnable {
 		}
 
 	}
+	
 	// ================================ ±Ë¡æ»∆(kim jong hun ) =================================
 		
 	//Method Viewer
