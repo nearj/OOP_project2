@@ -32,7 +32,7 @@ public final class PMethod implements Methods, Parse, Field {
 	// -------------------------------- Member ----------------------------------
 	private Classes refClass;
 
-	private String contents;
+	public static String contents;
 	private List<Members> memberList = new ArrayList<>();
 
 	private String field;
