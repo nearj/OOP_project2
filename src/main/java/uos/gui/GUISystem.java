@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -26,6 +27,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.AbstractButton;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -63,6 +65,7 @@ public class GUISystem implements Runnable {
 	private static JMenuBar jmb = new JMenuBar();
 	private static final JScrollPane DEFAULT_TREE = new JScrollPane();
 	private static final JScrollPane DEFAULT_INFO = new JScrollPane();
+	public JTextArea methodContentText;
 
 	@Override
 	public void run() {
@@ -443,6 +446,7 @@ public class GUISystem implements Runnable {
 	public class MyFrame extends JFrame {
 		private JButton jb1;
 		private JButton jb2;
+		private JButton jb3;
 		String methodString;
 		void setMethodString(String str) {
 			this.methodString = str;
@@ -450,20 +454,31 @@ public class GUISystem implements Runnable {
 		}
 
 		public MyFrame() {
-			this.setSize(300, 200);
+			this.setSize(1200, 800);
 			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			this.setTitle("Save File?");
 			JPanel panel = new JPanel();
+			JPanel panel0 = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+			makeLabel(panel, "Do you want to save file?");
+			makePanel(panel0);
+			add(panel);
+			pack();
+			setVisible(true);
+			
+			panel0.setLayout(new FlowLayout(FlowLayout.CENTER));
+			panel0.add(jb1("Save"));
+			panel0.add(jb2("Don't Save"));
+			panel0.add(jb3("Cancel"));
 			jb1= new JButton("Apply");
+			
 			jb1.addActionListener(new ActionListener() {
 				
 				@Override
-        public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					setMethodString(methodContentText.getText());
 					}
 				});
-			panel.add(jb1);
-			jb2= new JButton("Cancel");
 			jb2.addActionListener(new ActionListener() {
 				
 				@Override
@@ -471,9 +486,31 @@ public class GUISystem implements Runnable {
 					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					}
 				});
-			panel.add(jb2);
+			jb3.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				}
+				
+			});
 			this.add(panel);
 			this.setVisible(true);
+		}
+
+		private Component jb1(String string) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		private void makePanel(JPanel panel) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		private void makeLabel(JPanel panel, String string) {
+			// TODO Auto-generated method stub
+			
 		}
 
 	}
@@ -500,6 +537,16 @@ public class GUISystem implements Runnable {
 		}
 		mainPanel.revalidate();
 		mainPanel.repaint();
+	}
+
+	public Component jb3(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Component jb2(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private static void infoPartControllor( Component comp ) {
