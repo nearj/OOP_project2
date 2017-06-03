@@ -459,6 +459,7 @@ public class GUISystem implements Runnable {
 			this.setTitle("Save File?");
 			JPanel panel = new JPanel();
 			JPanel panel0 = new JPanel();
+			
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 			makeLabel(panel, "Do you want to save file?");
 			makePanel(panel0);
@@ -467,10 +468,11 @@ public class GUISystem implements Runnable {
 			setVisible(true);
 			
 			panel0.setLayout(new FlowLayout(FlowLayout.CENTER));
-			panel0.add(jb1("Save"));
-			panel0.add(jb2("Don't Save"));
-			panel0.add(jb3("Cancel"));
-			jb1= new JButton("Apply");
+			createButton1(panel0, jb1);
+			createButton2(panel0, jb2);
+			createButton3(panel0, jb3);
+			panel0.add(new JButton("Don't Save"));
+			panel0.add(new JButton("Cancel"));
 			
 			jb1.addActionListener(new ActionListener() {
 				
@@ -498,18 +500,32 @@ public class GUISystem implements Runnable {
 			this.setVisible(true);
 		}
 
-		private Component jb1(String string) {
-			// TODO Auto-generated method stub
-			return null;
+		private void createButton3(JPanel panel, String buttonname) {
+			panel.add(new JButton("Cancel"));
+			// I want to name this button 'jb3'
+		}
+
+		private void createButton2(JPanel panel, String buttonname) {
+			panel.add(new JButton("Don't Save"));
+			// I want to name this button 'jb2'
+		}
+
+		private void createButton1(JPanel panel, String buttonname) {
+			panel.add(new JButton("Save"));
+			// I want to name this button 'jb1'
+			
 		}
 
 		private void makePanel(JPanel panel) {
-			// TODO Auto-generated method stub
+			panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+			panel.add(panel);
 			
 		}
 
 		private void makeLabel(JPanel panel, String string) {
-			// TODO Auto-generated method stub
+			JLabel label = new JLabel(string);
+			label.setAlignmentX(Component.CENTER_ALIGNMENT);
+			panel.add(label);
 			
 		}
 
