@@ -3,7 +3,7 @@ package uos;
 /**
  * Type of member or method.
  * 
- * @author 216920054_JUHAYONG
+ * @author 216920009_±Ë¡æ»∆
  */
 public enum Type {
 	VOID( "void" ), BOOL( "bool" ), INT( "int" ), NULL( "" );

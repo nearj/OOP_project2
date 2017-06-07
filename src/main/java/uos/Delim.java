@@ -3,7 +3,7 @@ package uos;
 /**
  * Set of Delimiter to use.
  * 
- * @author 2016920054_JUHAYONG
+ * @author 2016920009_±Ë¡æ»∆
  */
 public class Delim {
 
