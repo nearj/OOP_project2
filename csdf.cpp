@@ -1,5 +1,4 @@
-class Queue {
-
+class  Queue{
 public:
   Queue(void);
   bool IsEmpty();
@@ -13,39 +12,38 @@ private:
   int size;
   int last;
   int first;
-
 };
 
-Queue::Queue(void) {
+Queue::Queue(void){
   size = 10;
   last = 0;
   first = 0;
 }
 
-Queue::~Queue(void) {}
-
-bool Queue::IsEmpty() {
+bool Queue::IsEmpty(){
   if( (last) % size == first )
 	return true;
   else return false;
 }
 
-bool Queue::IsFull() {
-  if( ( last + 1 ) % == first  )
-	return true;
-  else return false;
+bool Queue::IsFull(){
+
 }
 
-void Queue::EnQueue( int data ) {
+void Queue::EnQueue( int data ){
   if( Queue:: isFull() ) {
 	arr[last] = data;
 	last = ( last + 1 ) % size;
   }
 }
 
-int Queue::DeQueue() {
+int Queue::DeQueue(){
   if( Queue::isEmpty() ) {
 	return arr[first++];
 	first = ( first + 1 ) % size;
   }
+}
+
+Queue::~Queue(void){
+ 
 }

@@ -8,9 +8,9 @@ import java.util.List;
  * @author 2016920054_JUHAYONG
  */
 public interface Classes {
-
+	
 	// < Name >
-
+	
 	/**
 	 * Set name of (@link Classes}.
 	 * 
@@ -18,17 +18,17 @@ public interface Classes {
 	 *            name of class
 	 */
 	public void setName( String className );
-
+	
 	/**
 	 * Return name of {@link Classes}.
 	 * 
 	 * @return name of class.
 	 */
 	public String getName();
-
+	
 	// < /Name >
 	// < Method List >
-
+	
 	/**
 	 * Set {@link Methods}
 	 * 
@@ -36,7 +36,7 @@ public interface Classes {
 	 *            method to add method list of the class.
 	 */
 	public void setMethod( Methods methods );
-
+	
 	/**
 	 * Return {@link Methods}
 	 * 
@@ -45,7 +45,7 @@ public interface Classes {
 	 * @return method instance which specified.
 	 */
 	public Methods getMethod( int index );
-
+	
 	/**
 	 * Return {@link Methods}
 	 * 
@@ -54,14 +54,14 @@ public interface Classes {
 	 * @return method instance which specified.
 	 */
 	public Methods getMethod( String methodName );
-
+	
 	/**
 	 * Return {@link List} of {@link Methods}.
 	 * 
 	 * @return method-list of the class.
 	 */
-	public List<Methods> getMethodList();
-
+	public List< Methods > getMethodList();
+	
 	/**
 	 * Remove method from method-list of the class.
 	 * 
@@ -69,7 +69,7 @@ public interface Classes {
 	 *            index of method to remove from method-list of the class.
 	 */
 	public void removeMethod( int index );
-
+	
 	/**
 	 * Remove method from method-list of the class.
 	 * 
@@ -77,15 +77,25 @@ public interface Classes {
 	 *            method to remove from method-list of the class.
 	 */
 	public void removeMethod( Methods methods );
-
+	
+	/**
+	 * change method source to destination
+	 * 
+	 * @param method_Src
+	 *            method to replace
+	 * @param method_Dst
+	 *            method to be replaced
+	 */
+	public void replaceMethod( Methods method_Src, Methods method_Dst );
+	
 	/**
 	 * Clear method-list in the class.
 	 */
 	public void clearMethodList();
-
+	
 	// < /Method List >
 	// < Member List >
-
+	
 	/**
 	 * Set {@link Members}
 	 * 
@@ -93,7 +103,7 @@ public interface Classes {
 	 *            member to add member-list of the class
 	 */
 	public void setMember( Members members );
-
+	
 	/**
 	 * Return {@link Members} in class member-list
 	 * 
@@ -102,7 +112,7 @@ public interface Classes {
 	 * @return member in the class member-list
 	 */
 	public Members getMember( int index );
-
+	
 	/**
 	 * Return {@link Members} in class member-list
 	 * 
@@ -111,14 +121,14 @@ public interface Classes {
 	 * @return member in the class member-list
 	 */
 	public Members getMember( String memberName );
-
+	
 	/**
 	 * Return {@link List} of {@link Members} of class
 	 * 
 	 * @return member-list of the class
 	 */
-	public List<Members> getMemberList();
-
+	public List< Members > getMemberList();
+	
 	/**
 	 * Remove member in member-list of the class
 	 * 
@@ -126,7 +136,7 @@ public interface Classes {
 	 *            index of member-list of the class
 	 */
 	public void removeMember( int index );
-
+	
 	/**
 	 * Remove member in member-list of the class
 	 * 
@@ -134,10 +144,11 @@ public interface Classes {
 	 *            member in member-list of the class
 	 */
 	public void removeMember( Members members );
-
+	
 	/**
 	 * Clear member-list of the class.
 	 */
 	public void clearMemberList();
 	// < /Member List >
+	
 }

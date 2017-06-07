@@ -3,11 +3,12 @@ package uos.parse;
 import java.util.ArrayList;
 import java.util.List;
 
+import uos.AccessModifier;
 import uos.Type;
 
 /**
  * 
- * @author 2016920054_ê¹€ì¢…í›ˆ
+ * @author 2016920009 ±èÁ¾ÈÆ
  *
  */
 public final class PMember implements Members {
@@ -18,7 +19,8 @@ public final class PMember implements Members {
 	private Type returnType;
 	private MemberType memberType;
 	private Methods memberOfMember;
-	// PMemberï¿½ï¿½ï¿½ï¿½ Mapï¿½ï¿½ ï¿½ï¿½ï¿½îµµ ï¿½ï¿½ï¿½ï¿½?
+	private AccessModifier am;
+
 
 	private PMember() {
 	}
@@ -138,5 +140,15 @@ public final class PMember implements Members {
 	public void setMemberType( String memberType ) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void setAccessModifier( AccessModifier am ) {
+		this.am = am;
+	}
+
+	@Override
+	public AccessModifier getAccessModifier() {
+		return am;
 	}
 }

@@ -10,7 +10,7 @@ public class Delim {
 	public final static String INITIAL_OPEN = "{";
 	public final static String INITIAL_CLOSE = "};";
 	public final static String CLASS = "class";
-
+	
 	
 	public final static String CONSTRUCTOR_OPEN = "{";
 	public final static String CONSTRUCTOR_CLOSE = "}";

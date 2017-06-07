@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * instnace.
  * </p>
  * 
- * @author 2016920054_ì£¼í•˜ìš©
+ * @author 2016920054_ÁÖÇÏ¿ë
  *
  */
 public final class PClass implements Classes, Parse, Field {
@@ -164,5 +164,10 @@ public final class PClass implements Classes, Parse, Field {
 	}
 	// < /Content >
 	// -------------------------------- Method ----------------------------------
+
+	@Override
+	public void replaceMethod( Methods method_Src, Methods method_Dst ) {
+		 methodList.set( methodList.indexOf( method_Dst ), method_Dst );
+	}
 
 }

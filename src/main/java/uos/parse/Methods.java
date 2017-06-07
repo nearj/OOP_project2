@@ -9,7 +9,7 @@ import uos.Type;
 /**
  * This interface stands for to save method data.
  * 
- * @author 2016920054_ì£¼í•˜ìš©
+ * @author 2016920054_ÁÖÇÏ¿ë
  */
 public interface Methods {
 

@@ -2,11 +2,12 @@ package uos.parse;
 
 import java.util.List;
 
+import uos.AccessModifier;
 import uos.Type;
 
 /**
  * 
- * @author 2016920009_ê¹€ì¢…í›ˆ
+ * @author 2016920009_±èÁ¾ÈÆ
  *
  */
 public interface Members {
@@ -58,6 +59,23 @@ public interface Members {
 
 	// < /Reference class >
 
+	/**
+	 * Set modifier of method<br>
+	 * Type of access modifier: public, protected, private
+	 * 
+	 * @param am
+	 *            Access modifier of method.
+	 */
+	public void setAccessModifier( AccessModifier am );
+
+	/**
+	 * Get modifier of method<br>
+	 * Type of access modifier: public, protected, private
+	 * 
+	 * @return Access modifier of method.
+	 */
+	public AccessModifier getAccessModifier();
+	
 	public Type getReturnType();
 
 	public void setReturnType( Type type );
